@@ -1,8 +1,12 @@
 # Vietnamese NLP Mastery: Từ Tiền Xử Lý Tiếng Việt Đến Pretrained Transformers, LLM & Agentic RAG
 
-[![CI Status](https://img.shields.io/github/actions/workflow/status/vietnamese-nlp-mastery/vietnamese-nlp-mastery/ci.yml?branch=main&label=CI%20Notebooks%20%26%20Tests)](.github/workflows/ci.yml)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/jamesng16/LearnNLP/ci.yml?branch=main&label=CI%20Notebooks%20%26%20Tests)](.github/workflows/ci.yml)
+[![Live Web Lab](https://img.shields.io/badge/Live%20Web%20Lab-Railway%20Production-4f46e5.svg)](https://vietnamese-nlp-web-production.up.railway.app)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+> **Live Interactive Web Platform:** [https://vietnamese-nlp-web-production.up.railway.app](https://vietnamese-nlp-web-production.up.railway.app)
+> **GitHub Repository:** [https://github.com/jamesng16/LearnNLP](https://github.com/jamesng16/LearnNLP)
 
 Kho tài nguyên học tập, thực hành và benchmark toàn diện về **Xử lý Ngôn ngữ Tự nhiên Tiếng Việt (Vietnamese NLP)** — được thiết kế theo lộ trình 4 giai đoạn (6 tuần), kết hợp giữa **Awesome Vietnamese NLP List** và **End-to-End Practical Notebooks**.
 
@@ -59,25 +63,25 @@ vietnamese-nlp-mastery/
 
 ### Giai đoạn 1: Khởi tạo & Xử lý đặc thù Tiếng Việt (Tuần 1)
 - **Bài 1.1**: [Chuẩn hóa Unicode (`NFC` vs `NFD`), dấu thanh (`hòa` vs `hoà`) & làm sạch văn bản](01_Foundations_Preprocessing/01_unicode_normalization_and_cleaning.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/01_Foundations_Preprocessing/01_unicode_normalization_and_cleaning.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/01_Foundations_Preprocessing/01_unicode_normalization_and_cleaning.ipynb)
 - **Bài 1.2**: [Tách từ Tiếng Việt (`pyvi`, `underthesea`, `VnCoreNLP`), POS Tagging & Dependency Parsing](01_Foundations_Preprocessing/02_word_segmentation_underthesea_vncorenlp.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/01_Foundations_Preprocessing/02_word_segmentation_underthesea_vncorenlp.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/01_Foundations_Preprocessing/02_word_segmentation_underthesea_vncorenlp.ipynb)
 
 ### Giai đoạn 2: Biểu diễn văn bản & Fine-tuning PhoBERT / ViT5 (Tuần 2 - 3)
 - **Bài 2.1**: [TF-IDF Baseline, Word2Vec & Pretrained `PhoW2V`](02_Classical_and_Embeddings/01_tfidf_word2vec_phow2v.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/02_Classical_and_Embeddings/01_tfidf_word2vec_phow2v.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/02_Classical_and_Embeddings/01_tfidf_word2vec_phow2v.ipynb)
 - **Bài 3.1**: [Fine-tuning `PhoBERT-base-v2` phân tích cảm xúc trên `UIT-VSFC`](03_Pretrained_Transformers/01_phobert_text_classification_uit_vsfc.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/03_Pretrained_Transformers/01_phobert_text_classification_uit_vsfc.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/03_Pretrained_Transformers/01_phobert_text_classification_uit_vsfc.ipynb)
 - **Bài 3.2**: [Nhận diện thực thể có tên (NER) với `PhoNLP` & `PhoBERT`](03_Pretrained_Transformers/02_phonlp_named_entity_recognition.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/03_Pretrained_Transformers/02_phonlp_named_entity_recognition.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/03_Pretrained_Transformers/02_phonlp_named_entity_recognition.ipynb)
 - **Bài 3.3**: [Tóm tắt văn bản trừu tượng trên `VietNews` với `VietAI/vit5`](03_Pretrained_Transformers/03_vit5_abstractive_summarization.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/03_Pretrained_Transformers/03_vit5_abstractive_summarization.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/03_Pretrained_Transformers/03_vit5_abstractive_summarization.ipynb)
 
 ### Giai đoạn 3: LLM Tiếng Việt, QLoRA Fine-tuning & Agentic RAG (Tuần 4 - 5)
 - **Bài 4.1**: [Lượng tử hóa 4-bit & QLoRA Fine-tuning `Qwen2.5` / `Sailor2` trên hội thoại Tiếng Việt](04_Vietnamese_LLMs_and_Agents/01_qlora_finetuning_qwen_vietnamese.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/04_Vietnamese_LLMs_and_Agents/01_qlora_finetuning_qwen_vietnamese.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/04_Vietnamese_LLMs_and_Agents/01_qlora_finetuning_qwen_vietnamese.ipynb)
 - **Bài 4.2**: [Xây dựng hệ thống Agentic RAG Tiếng Việt với `LangGraph` & Hybrid Search trên `ViQuAD`](04_Vietnamese_LLMs_and_Agents/02_vietnamese_rag_langgraph_pipeline.ipynb)
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vietnamese-nlp-mastery/vietnamese-nlp-mastery/blob/main/04_Vietnamese_LLMs_and_Agents/02_vietnamese_rag_langgraph_pipeline.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamesng16/LearnNLP/blob/main/04_Vietnamese_LLMs_and_Agents/02_vietnamese_rag_langgraph_pipeline.ipynb)
 
 ---
 
