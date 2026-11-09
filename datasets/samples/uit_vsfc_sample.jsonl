@@ -1,0 +1,6 @@
+{"sentence": "Giảng viên dạy rất nhiệt tình, dễ hiểu và luôn giải đáp thắc mắc cho sinh viên.", "sentiment": 2, "sentiment_label": "Positive", "topic": 0, "topic_label": "Lecturer"}
+{"sentence": "Tài liệu môn học xử lý ngôn ngữ tự nhiên rất chi tiết, bám sát thực tế.", "sentiment": 2, "sentiment_label": "Positive", "topic": 1, "topic_label": "Curriculum"}
+{"sentence": "Phòng máy tính cấu hình hơi yếu, chạy mô hình học sâu rất chậm và hay bị treo.", "sentiment": 0, "sentiment_label": "Negative", "topic": 2, "topic_label": "Facility"}
+{"sentence": "Thầy giảng bài hơi nhanh, phần bài tập lớn chưa có hướng dẫn cụ thể.", "sentiment": 0, "sentiment_label": "Negative", "topic": 0, "topic_label": "Lecturer"}
+{"sentence": "Môn học kéo dài trong 15 tuần với 3 tín chỉ lý thuyết và 1 tín chỉ thực hành.", "sentiment": 1, "sentiment_label": "Neutral", "topic": 1, "topic_label": "Curriculum"}
+{"sentence": "Cần bổ sung thêm các bài thực hành về mô hình ngôn ngữ lớn và hệ thống truy xuất.", "sentiment": 1, "sentiment_label": "Neutral", "topic": 1, "topic_label": "Curriculum"}

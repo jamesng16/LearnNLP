@@ -1,0 +1,2 @@
+{"words": ["Viện", "Nghiên_cứu", "Trí_tuệ", "Nhân_tạo", "VinAI", "tại", "Hà_Nội", "vừa", "công_bố", "mô_hình", "PhoBERT", "."], "tags": ["B-ORGANIZATION", "I-ORGANIZATION", "I-ORGANIZATION", "I-ORGANIZATION", "I-ORGANIZATION", "O", "B-LOCATION", "O", "O", "O", "B-MISC", "O"]}
+{"words": ["Bệnh_nhân", "Nguyễn_Văn_A", "(", "45", "tuổi", ")", "điều_trị", "tại", "Bệnh_viện", "Chợ_Rẫy", ",", "TP._Hồ_Chí_Minh", "."], "tags": ["O", "B-NAME", "O", "B-AGE", "O", "O", "O", "O", "B-LOCATION", "I-LOCATION", "O", "B-LOCATION", "O"]}

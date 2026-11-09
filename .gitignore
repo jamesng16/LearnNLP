@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Datasets & Model weights (keep scripts and small samples)
+datasets/raw/
+datasets/processed/
+!datasets/samples/
+models/
+vncorenlp_models/
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.gguf
+*.jar
+
+# HuggingFace & WandB cache
+.cache/
+wandb/
+outputs/
+lightning_logs/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env

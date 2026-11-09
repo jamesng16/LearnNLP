@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- MANDATORY: Declare support for both light and dark themes to prevent FOUC -->
+  <meta name="color-scheme" content="light dark" />
+  <title>Vietnamese NLP Mastery — Lộ trình &amp; Phòng Thí Nghiệm NLP Tiếng Việt</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <!-- Reusable SVG Sprite Definitions (Official Lucide Vector Paths) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" aria-hidden="true">
+    <symbol id="ic-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 7v14" />
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3a3 3 0 0 0-3-3z" />
+    </symbol>
+    <symbol id="ic-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m4 17 6-6-6-6" />
+      <path d="M12 19h8" />
+    </symbol>
+    <symbol id="ic-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <rect x="8" y="8" width="8" height="8" rx="1" />
+      <path d="M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2" />
+    </symbol>
+    <symbol id="ic-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+      <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+      <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
+    </symbol>
+    <symbol id="ic-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15" />
+      <circle cx="18" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <path d="M18 9a9 9 0 0 1-9 9" />
+    </symbol>
+    <symbol id="ic-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+      <path d="M3 12a9 3 0 0 0 18 0" />
+    </symbol>
+    <symbol id="ic-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    </symbol>
+    <symbol id="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2M20 12h2m-15.66 5.66-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </symbol>
+    <symbol id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </symbol>
+    <symbol id="ic-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="6 3 20 12 6 21 6 3" />
+    </symbol>
+    <symbol id="ic-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="6" />
+      <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
+    </symbol>
+    <symbol id="ic-code-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m18 16 4-4-4-4" />
+      <path d="m6 8-4 4 4 4" />
+      <path d="m14.5 4-5 16" />
+    </symbol>
+    <symbol id="ic-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="16" y="16" width="6" height="6" rx="1" />
+      <rect x="2" y="16" width="6" height="6" rx="1" />
+      <rect x="9" y="2" width="6" height="6" rx="1" />
+      <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+      <path d="M12 12V8" />
+    </symbol>
+    <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </symbol>
+    <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </symbol>
+    <symbol id="ic-rotate-ccw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </symbol>
+    <symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </symbol>
+  </svg>
+
+  <!-- Ambient Background Mesh Layer -->
+  <div class="bg-mesh" aria-hidden="true"></div>
+
+  <!-- Top Navigation & Global Learning Progress -->
+  <header class="topbar">
+    <div class="brand" id="brandHomeLink" role="button" tabindex="0" title="Về trang chủ Landing Page">
+      <div class="brand-logo" aria-hidden="true">VN<span>NLP</span></div>
+      <div>
+        <h1 class="brand-title">Vietnamese NLP Mastery</h1>
+        <p class="subtitle">Lộ trình 4 Giai đoạn từ Tiền xử lý Tiếng Việt đến Pretrained Transformers, LLM &amp; Agentic RAG</p>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <!-- Back to Landing Page button (visible when inside Learning Studio) -->
+      <button class="btn-nav-ghost hidden" id="backToLandingBtn" type="button">
+        <svg class="svg-icon" width="16" height="16"><use href="#ic-home"></use></svg>
+        <span>Trang chủ</span>
+      </button>
+
+      <!-- Theme Toggle (Light Editorial vs Dark Studio) -->
+      <button class="btn-theme-toggle" id="themeToggleBtn" type="button" aria-label="Chuyển đổi giao diện Sáng / Tối">
+        <svg class="svg-icon" id="themeSvgIcon" width="16" height="16"><use href="#ic-sun"></use></svg>
+        <span id="themeLabel">Giao diện Sáng</span>
+      </button>
+
+      <!-- Global XP & Progress Panel -->
+      <div class="progress-panel" aria-label="Tiến độ học tập">
+        <div class="progress-stats">
+          <span class="badge-xp" id="xpDisplay">
+            <svg class="svg-icon" width="14" height="14"><use href="#ic-award"></use></svg>
+            <span id="xpValueText">0 / 800 XP</span>
+          </span>
+          <span class="progress-label" id="progressText">Hoàn thành: 0/4 Giai đoạn</span>
+          <button class="btn-reset" id="resetProgressBtn" type="button" title="Đặt lại tiến độ học tập">
+            <svg class="svg-icon" width="12" height="12"><use href="#ic-rotate-ccw"></use></svg>
+            <span>Đặt lại</span>
+          </button>
+        </div>
+        <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+          <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================================== -->
+  <!-- VIEW 1: LANDING PAGE (HIỂN THỊ ĐẦU TIÊN KHI VÀO WEB)                   -->
+  <!-- ====================================================================== -->
+  <div id="landingView" class="landing-view">
+    <!-- Hero Section -->
+    <section class="landing-hero">
+      <div class="landing-hero-left">
+        <div class="landing-badge">
+          <svg class="svg-icon" width="15" height="15"><use href="#ic-layers"></use></svg>
+          <span>OPEN-SOURCE VIETNAMESE NLP CURRICULUM &amp; INTERACTIVE LAB</span>
+        </div>
+        <h2 class="landing-headline" id="landing-main-heading" tabindex="-1">
+          Làm chủ Xử lý Ngôn ngữ Tự nhiên <span>Tiếng Việt</span> từ Gốc đến LLM &amp; Agentic RAG
+        </h2>
+        <p class="landing-lead">
+          Nền tảng học tập và thực hành tương tác trực tiếp trên trình duyệt — kết hợp <strong>8 Jupyter Notebooks chuẩn chỉnh</strong>, <strong>4 bộ dữ liệu chuẩn (UIT-VSFC, VLSP, ViQuAD 2.0, VietNews)</strong> cùng hệ thống <strong>Phòng thí nghiệm Python trực quan</strong>.
+        </p>
+
+        <div class="landing-cta-group">
+          <button class="btn-hero-start" id="startLearningMainBtn" type="button">
+            <span>Bắt Đầu Học Ngay</span>
+            <svg class="svg-icon" width="18" height="18"><use href="#ic-arrow-right"></use></svg>
+          </button>
+          <a href="#landingRoadmapSection" class="btn-hero-secondary">
+            <svg class="svg-icon" width="17" height="17"><use href="#ic-book-open"></use></svg>
+            <span>Xem Lộ Trình 4 Giai Đoạn</span>
+          </a>
+        </div>
+
+        <!-- Official Brand Logos Bar (Simple Icons CDN) -->
+        <div class="tech-brand-bar">
+          <span class="tech-brand-label">CÔNG NGHỆ &amp; HỆ SINH THÁI:</span>
+          <div class="tech-brand-logos">
+            <span class="brand-chip" title="Python 3.10+">
+              <img src="https://cdn.simpleicons.org/python/3776AB" alt="Python" width="18" height="18" loading="lazy" />
+              <span>Python</span>
+            </span>
+            <span class="brand-chip" title="PyTorch">
+              <img src="https://cdn.simpleicons.org/pytorch/EE4C2C" alt="PyTorch" width="18" height="18" loading="lazy" />
+              <span>PyTorch</span>
+            </span>
+            <span class="brand-chip" title="Hugging Face Transformers &amp; Datasets">
+              <img src="https://cdn.simpleicons.org/huggingface/FFD21E" alt="Hugging Face" width="18" height="18" loading="lazy" />
+              <span>Hugging Face</span>
+            </span>
+            <span class="brand-chip" title="FastAPI Python Backend">
+              <img src="https://cdn.simpleicons.org/fastapi/009688" alt="FastAPI" width="18" height="18" loading="lazy" />
+              <span>FastAPI</span>
+            </span>
+            <span class="brand-chip" title="Google Colab Notebooks">
+              <img src="https://cdn.simpleicons.org/googlecolab/F9AB00" alt="Google Colab" width="18" height="18" loading="lazy" />
+              <span>Colab Ready</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Live Pipeline Preview Card on Landing Hero -->
+      <div class="landing-hero-right">
+        <div class="hero-preview-card">
+          <div class="preview-window-bar">
+            <div class="window-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="window-title">vn_nlp_pipeline_preview.py</div>
+          </div>
+
+          <div class="preview-body">
+            <div class="preview-step">
+              <div class="preview-step-header">
+                <span class="preview-tag">01. Raw Input (NFD + Teencode)</span>
+              </div>
+              <div class="preview-code-box muted-code">
+                "GV&#8203; dạy rất nhiệt tình, SV học sinh học dễ hiểu."
+              </div>
+            </div>
+
+            <div class="preview-step">
+              <div class="preview-step-header">
+                <span class="preview-tag tag-blue">02. Unicode NFC + RDRSegmenter (VnCoreNLP)</span>
+              </div>
+              <div class="preview-tokens-row">
+                <span class="p-tok compound">Giảng_viên <b>N</b></span>
+                <span class="p-tok">dạy <b>V</b></span>
+                <span class="p-tok compound">nhiệt_tình <b>A</b></span>
+                <span class="p-tok compound">sinh_viên <b>N</b></span>
+                <span class="p-tok">học <b>V</b></span>
+                <span class="p-tok compound">sinh_học <b>N</b></span>
+              </div>
+            </div>
+
+            <div class="preview-step">
+              <div class="preview-step-header">
+                <span class="preview-tag tag-emerald">03. PhoBERT-v2 / BGE-M3 + LangGraph Self-RAG</span>
+              </div>
+              <div class="preview-metrics-row">
+                <div class="p-metric">
+                  <span>Sentiment (UIT-VSFC)</span>
+                  <strong class="text-emerald">Positive (94.2%)</strong>
+                </div>
+                <div class="p-metric">
+                  <span>Hybrid RAG Recall@5</span>
+                  <strong class="text-hero">91.5% (ViQuAD 2.0)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Metrics Strip -->
+    <section class="landing-stats-strip">
+      <div class="stat-strip-item">
+        <div class="stat-strip-icon">
+          <svg class="svg-icon" width="22" height="22"><use href="#ic-layers"></use></svg>
+        </div>
+        <div>
+          <div class="stat-strip-num">4 Giai Đoạn</div>
+          <div class="stat-strip-label">Lộ trình 6 tuần từ cơ bản đến nâng cao</div>
+        </div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="stat-strip-icon">
+          <svg class="svg-icon" width="22" height="22"><use href="#ic-terminal"></use></svg>
+        </div>
+        <div>
+          <div class="stat-strip-num">6 Phòng Lab Live</div>
+          <div class="stat-strip-label">Thực hành trực tiếp với Python Backend</div>
+        </div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="stat-strip-icon">
+          <svg class="svg-icon" width="22" height="22"><use href="#ic-database"></use></svg>
+        </div>
+        <div>
+          <div class="stat-strip-num">4 Datasets Chuẩn</div>
+          <div class="stat-strip-label">UIT-VSFC, PhoNER/VLSP, ViQuAD, VietNews</div>
+        </div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="stat-strip-icon">
+          <svg class="svg-icon" width="22" height="22"><use href="#ic-award"></use></svg>
+        </div>
+        <div>
+          <div class="stat-strip-num">800 XP Thực Chiến</div>
+          <div class="stat-strip-label">Bài tập cấu hình Pipeline &amp; Quiz chấm điểm</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Stage Curriculum Roadmap Cards on Landing Page -->
+    <section class="landing-section" id="landingRoadmapSection">
+      <div class="landing-section-header">
+        <span class="stage-pill">CURRICULUM ROADMAP</span>
+        <h2>Lộ Trình Học Tập &amp; Thực Hành 4 Giai Đoạn</h2>
+        <p class="muted">Chọn một giai đoạn bất kỳ bên dưới để vào thẳng Phòng thí nghiệm tương ứng, hoặc bắt đầu tuần tự từ Giai đoạn 1.</p>
+      </div>
+
+      <div class="landing-roadmap-grid">
+        <!-- Stage 1 Card -->
+        <article class="roadmap-card">
+          <div class="roadmap-card-top">
+            <span class="roadmap-week">GIAI ĐOẠN 01 • TUẦN 1</span>
+            <div class="roadmap-icon">
+              <svg class="svg-icon" width="22" height="22"><use href="#ic-code-2"></use></svg>
+            </div>
+          </div>
+          <h3>Tiền xử lý &amp; Đặc thù Tiếng Việt</h3>
+          <p class="muted">Giải quyết triệt để lỗi bảng mã Unicode dựng sẵn (NFC) vs. tổ hợp (NFD), chuẩn hóa dấu thanh (hòa vs. hoà) và bài toán tách từ ghép.</p>
+          <ul class="roadmap-topics">
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Mổ xẻ byte-level Unicode <code>NFC</code> vs. <code>NFD</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Tách từ với <code>pyvi</code>, <code>underthesea</code>, <code>VnCoreNLP</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>POS Tagging &amp; Dependency Parsing</span></li>
+          </ul>
+          <button class="btn-card-action" type="button" data-enter-stage="1">
+            <span>Vào học Giai đoạn 1</span>
+            <svg class="svg-icon" width="16" height="16"><use href="#ic-arrow-right"></use></svg>
+          </button>
+        </article>
+
+        <!-- Stage 2 Card -->
+        <article class="roadmap-card">
+          <div class="roadmap-card-top">
+            <span class="roadmap-week">GIAI ĐOẠN 02 • TUẦN 2</span>
+            <div class="roadmap-icon">
+              <svg class="svg-icon" width="22" height="22"><use href="#ic-network"></use></svg>
+            </div>
+          </div>
+          <h3>Biểu diễn Văn bản &amp; Word Embeddings</h3>
+          <p class="muted">Xây dựng baseline phân loại văn bản siêu tốc với TF-IDF và khám phá không gian vector ngữ nghĩa liên tục của PhoW2V.</p>
+          <ul class="roadmap-topics">
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>TF-IDF N-gram trên từ ghép + <code>LinearSVC</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Không gian Vector 2D <code>PhoW2V</code> tương tác 60fps</span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Đo độ tương đồng <code>Cosine Similarity</code></span></li>
+          </ul>
+          <button class="btn-card-action" type="button" data-enter-stage="2">
+            <span>Vào học Giai đoạn 2</span>
+            <svg class="svg-icon" width="16" height="16"><use href="#ic-arrow-right"></use></svg>
+          </button>
+        </article>
+
+        <!-- Stage 3 Card -->
+        <article class="roadmap-card">
+          <div class="roadmap-card-top">
+            <span class="roadmap-week">GIAI ĐOẠN 03 • TUẦN 3 - 4</span>
+            <div class="roadmap-icon">
+              <svg class="svg-icon" width="22" height="22"><use href="#ic-cpu"></use></svg>
+            </div>
+          </div>
+          <h3>Pretrained Transformers Tiếng Việt</h3>
+          <p class="muted">Làm chủ kiến trúc Encoder-only (PhoBERT-base-v2, PhoNLP) và Encoder-Decoder (VietAI/vit5) cho 3 bài toán kinh điển.</p>
+          <ul class="roadmap-topics">
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Fine-tuning <code>PhoBERT-v2</code> trên tập <code>UIT-VSFC</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Nhận diện thực thể NER &amp; Subword Alignment <code>-100</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Tóm tắt văn bản <code>VietNews</code> với <code>VietAI/vit5</code></span></li>
+          </ul>
+          <button class="btn-card-action" type="button" data-enter-stage="3">
+            <span>Vào học Giai đoạn 3</span>
+            <svg class="svg-icon" width="16" height="16"><use href="#ic-arrow-right"></use></svg>
+          </button>
+        </article>
+
+        <!-- Stage 4 Card -->
+        <article class="roadmap-card">
+          <div class="roadmap-card-top">
+            <span class="roadmap-week">GIAI ĐOẠN 04 • TUẦN 5 - 6</span>
+            <div class="roadmap-icon">
+              <svg class="svg-icon" width="22" height="22"><use href="#ic-git-branch"></use></svg>
+            </div>
+          </div>
+          <h3>LLM Tiếng Việt, QLoRA &amp; Agentic RAG</h3>
+          <p class="muted">Tinh chỉnh nhẹ LLM (Qwen2.5, Sailor2, URA-Llama) với QLoRA 4-bit NF4 và xây dựng hệ thống Hybrid Self-RAG bằng LangGraph.</p>
+          <ul class="roadmap-topics">
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Máy tính VRAM <code>QLoRA 4-bit NF4</code> + Adapter LoRA</span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Hybrid Search: <code>BM25 (tách từ)</code> + <code>BGE-M3</code></span></li>
+            <li><svg class="svg-icon" width="15" height="15"><use href="#ic-check-circle"></use></svg><span>Đồ thị trạng thái <code>LangGraph Self-RAG</code> chống ảo giác</span></li>
+          </ul>
+          <button class="btn-card-action" type="button" data-enter-stage="4">
+            <span>Vào học Giai đoạn 4</span>
+            <svg class="svg-icon" width="16" height="16"><use href="#ic-arrow-right"></use></svg>
+          </button>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- VIEW 2: INTERACTIVE LEARNING STUDIO (HIỂN THỊ KHI BẤM BẮT ĐẦU HỌC)     -->
+  <!-- ====================================================================== -->
+  <div class="layout-container hidden" id="studioView">
+    <!-- Left Sidebar Roadmap (4 Stages) -->
+    <aside class="sidebar" aria-label="Lộ trình 4 giai đoạn">
+      <div class="sidebar-section-title">LỘ TRÌNH HỌC TẬP (6 TUẦN)</div>
+      <nav class="stage-nav" id="stageNav">
+        <button class="stage-btn active" data-stage="1" type="button">
+          <div class="stage-num">01</div>
+          <div class="stage-info">
+            <div class="stage-title">Tiền xử lý &amp; Đặc thù Tiếng Việt</div>
+            <div class="stage-meta">Tuần 1 • Unicode NFC/NFD, Dấu thanh, Tách từ</div>
+          </div>
+          <span class="stage-status" id="stageStatus1" aria-label="Chưa hoàn thành">○</span>
+        </button>
+
+        <button class="stage-btn" data-stage="2" type="button">
+          <div class="stage-num">02</div>
+          <div class="stage-info">
+            <div class="stage-title">Biểu diễn Văn bản &amp; Word Embeddings</div>
+            <div class="stage-meta">Tuần 2 • TF-IDF, Word2Vec, Không gian 2D PhoW2V</div>
+          </div>
+          <span class="stage-status" id="stageStatus2" aria-label="Chưa hoàn thành">○</span>
+        </button>
+
+        <button class="stage-btn" data-stage="3" type="button">
+          <div class="stage-num">03</div>
+          <div class="stage-info">
+            <div class="stage-title">Pretrained Transformers Tiếng Việt</div>
+            <div class="stage-meta">Tuần 3-4 • PhoBERT-v2, PhoNLP NER, ViT5</div>
+          </div>
+          <span class="stage-status" id="stageStatus3" aria-label="Chưa hoàn thành">○</span>
+        </button>
+
+        <button class="stage-btn" data-stage="4" type="button">
+          <div class="stage-num">04</div>
+          <div class="stage-info">
+            <div class="stage-title">LLM Tiếng Việt, QLoRA &amp; Agentic RAG</div>
+            <div class="stage-meta">Tuần 5-6 • Qwen/Sailor2, BGE-M3, LangGraph</div>
+          </div>
+          <span class="stage-status" id="stageStatus4" aria-label="Chưa hoàn thành">○</span>
+        </button>
+      </nav>
+
+      <!-- Core Repo Ecosystem Quick Reference -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">
+          <svg class="svg-icon" width="16" height="16"><use href="#ic-book-open"></use></svg>
+          <h3>Hệ Sinh Thái Nguồn Mở Cốt Lõi</h3>
+        </div>
+        <ul class="repo-links">
+          <li><span class="dot-indicator dot-edu"></span><strong>Datasets:</strong> <code>UIT-VSFC</code>, <code>VLSP</code>, <code>ViQuAD 2.0</code>, <code>VietNews</code></li>
+          <li><span class="dot-indicator dot-pos"></span><strong>Toolkits:</strong> <code>underthesea</code>, <code>VnCoreNLP</code>, <code>pyvi</code></li>
+          <li><span class="dot-indicator dot-nlp"></span><strong>Models:</strong> <code>PhoBERT-v2</code>, <code>PhoNLP</code>, <code>VietAI/vit5</code></li>
+          <li><span class="dot-indicator dot-loc"></span><strong>LLMs &amp; RAG:</strong> <code>ura-hcmut</code>, <code>Sailor2</code>, <code>Qwen2.5</code>, <code>BGE-M3</code></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Interactive Learning Workspace -->
+    <main class="workspace" id="mainWorkspace">
+      <!-- Mode Sub-navigation with Authentic SVG Icons -->
+      <div class="mode-tabs" role="tablist" aria-label="Chế độ học tập">
+        <button class="mode-tab active" data-tab="visual" role="tab" aria-selected="true" type="button">
+          <svg class="svg-icon" width="17" height="17"><use href="#ic-layers"></use></svg>
+          <span>1. Trực Quan Hóa &amp; Kiến Thức Cốt Lõi</span>
+        </button>
+        <button class="mode-tab" data-tab="sandbox" role="tab" aria-selected="false" type="button">
+          <svg class="svg-icon" width="17" height="17"><use href="#ic-terminal"></use></svg>
+          <span>2. Phòng Thí Nghiệm Tương Tác (Live Sandbox)</span>
+        </button>
+        <button class="mode-tab" data-tab="exercise" role="tab" aria-selected="false" type="button">
+          <svg class="svg-icon" width="17" height="17"><use href="#ic-award"></use></svg>
+          <span>3. Bài Tập Thực Chiến &amp; Quiz (+XP)</span>
+        </button>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- STAGE 1: FOUNDATIONS & PREPROCESSING                               -->
+      <!-- ================================================================== -->
+      <section class="stage-view active" id="stage-1">
+        <!-- Tab 1: Visual Explanations -->
+        <div class="tab-panel active" data-panel="visual">
+          <div class="card hero-card">
+            <div class="hero-header">
+              <div>
+                <span class="stage-pill">GIAI ĐOẠN 01 • TUẦN 1</span>
+                <h2 id="stage-heading-1" tabindex="-1">Xử lý Đặc thù Tiếng Việt: Bảng mã Unicode, Dấu thanh &amp; Tách từ</h2>
+                <p class="hero-desc">
+                  Hai nguyên nhân âm thầm nhất làm giảm <strong>3% – 8% F1-score</strong> của mô hình NLP Tiếng Việt là:
+                  trộn lẫn bảng mã <strong>Unicode Tổ hợp (NFD)</strong> với <strong>Dựng sẵn (NFC)</strong>, và truyền văn bản chưa tách từ vào các mô hình yêu cầu ranh giới từ ghép như <code>PhoBERT</code>.
+                </p>
+              </div>
+              <div class="hero-stat-box">
+                <div class="stat-num">+5.4%</div>
+                <div class="stat-caption">Mức tăng F1 trung bình khi chuẩn hóa đúng NFC + Dấu thanh + Tách từ</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Motion Step Cards -->
+          <div class="pipeline-steps-row">
+            <div class="step-card" style="--stagger: 1">
+              <div class="step-badge">Bước 1</div>
+              <h4>Chuẩn hóa Unicode <code>NFC</code></h4>
+              <p>Gộp các dấu thanh rời rạc (<code>NFD</code>) về ký tự dựng sẵn duy nhất (<code>NFC</code>) và xóa ký tự ẩn <code>\u200b</code>.</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 2">
+              <div class="step-badge">Bước 2</div>
+              <h4>Chuẩn hóa Dấu thanh &amp; Teencode</h4>
+              <p>Đồng nhất vị trí dấu thanh (<code>hoà → hòa</code>, <code>thuỷ → thủy</code>) khớp với từ điển <code>VnCoreNLP / PhoBERT</code>.</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 3">
+              <div class="step-badge">Bước 3</div>
+              <h4>Tách từ Ghép (Word Segmentation)</h4>
+              <p>Nối các âm tiết tạo thành từ ghép bằng dấu <code>_</code> (<code>Học_sinh học sinh_học</code>).</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- SVG Illustration 1: NFC vs NFD -->
+            <div class="card">
+              <div class="card-title-row">
+                <span class="icon-badge" aria-hidden="true">
+                  <svg class="svg-icon" width="20" height="20"><use href="#ic-code-2"></use></svg>
+                </span>
+                <div>
+                  <h3>Minh họa Động 1: Bẫy Unicode Dựng sẵn (NFC) vs. Tổ hợp (NFD)</h3>
+                  <p class="muted">Cùng hiển thị chữ <strong>"Việt"</strong> trên màn hình nhưng cách lưu trong bộ nhớ hoàn toàn khác nhau:</p>
+                </div>
+              </div>
+              <div class="svg-diagram-box">
+                <svg viewBox="0 0 540 235" class="edu-svg" role="img" aria-label="So sánh Unicode NFC 4 ký tự và NFD 6 ký tự cho từ Việt">
+                  <!-- NFC Row -->
+                  <rect x="14" y="14" width="512" height="92" rx="12" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                  <text x="28" y="38" fill="#34d399" font-size="13" font-weight="700">✓ NFC (Dựng sẵn - Chuẩn cho mọi mô hình NLP): len = 4 ký tự</text>
+                  <g transform="translate(28, 50)">
+                    <rect x="0" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="38" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">V (0056)</text>
+                    <rect x="86" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="124" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">i (0069)</text>
+                    <rect x="172" y="0" width="120" height="40" rx="8" fill="#065f46" stroke="#10b981" stroke-width="2" class="svg-pulse-node"/>
+                    <text x="232" y="25" fill="#ecfdf5" font-size="14" font-weight="700" text-anchor="middle">ệ (U+1EC7)</text>
+                    <rect x="302" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="340" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">t (0074)</text>
+                    <text x="442" y="25" fill="#34d399" font-size="13" font-weight="700" text-anchor="middle">✓ Khớp Vocab</text>
+                  </g>
+
+                  <!-- NFD Row -->
+                  <rect x="14" y="122" width="512" height="96" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
+                  <text x="28" y="146" fill="#fda4af" font-size="13" font-weight="700">✗ NFD (Tổ hợp - Lỗi khi copy từ PDF/macOS): len = 6 ký tự rời!</text>
+                  <g transform="translate(28, 158)">
+                    <rect x="0" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="26" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">V</text>
+                    <rect x="58" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="84" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">i</text>
+                    <rect x="116" y="0" width="72" height="40" rx="8" fill="#881337" stroke="#f43f5e"/>
+                    <text x="152" y="25" fill="#ffe4e6" font-size="12" font-weight="600" text-anchor="middle">e (0065)</text>
+                    <rect x="194" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
+                    <text x="235" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̣ (U+0323)</text>
+                    <rect x="282" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
+                    <text x="323" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̂ (U+0302)</text>
+                    <rect x="370" y="0" width="46" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                    <text x="393" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">t</text>
+                    <text x="456" y="25" fill="#fb7185" font-size="12" font-weight="700" text-anchor="middle">✗ Lỗi [UNK]</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <!-- SVG Illustration 2: Word Segmentation Ambiguity -->
+            <div class="card">
+              <div class="card-title-row">
+                <span class="icon-badge" aria-hidden="true">
+                  <svg class="svg-icon" width="20" height="20"><use href="#ic-git-branch"></use></svg>
+                </span>
+                <div>
+                  <h3>Minh họa Động 2: Ranh giới Từ ghép vs. Âm tiết</h3>
+                  <p class="muted">Khoảng trắng trong tiếng Việt phân tách <strong>âm tiết (tiếng)</strong>, không phải <strong>từ (word)</strong>:</p>
+                </div>
+              </div>
+              <div class="svg-diagram-box">
+                <svg viewBox="0 0 540 235" class="edu-svg" role="img" aria-label="Minh họa tách câu Học sinh học sinh học thành 3 từ Học_sinh, học, sinh_học">
+                  <text x="270" y="28" fill="#cbd5e1" font-size="13" font-weight="600" text-anchor="middle">Câu đầu vào: "Học sinh học sinh học" (5 âm tiết)</text>
+                  <!-- 5 Syllables -->
+                  <g transform="translate(45, 44)">
+                    <rect x="0" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
+                    <text x="40" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">Học</text>
+                    <rect x="92" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
+                    <text x="132" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">sinh</text>
+                    <rect x="184" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
+                    <text x="224" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">học</text>
+                    <rect x="276" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
+                    <text x="316" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">sinh</text>
+                    <rect x="368" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
+                    <text x="408" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">học</text>
+                  </g>
+
+                  <!-- Animated Connecting Flow Lines -->
+                  <path d="M 85 86 L 85 114 L 177 114 L 177 86" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                  <line x1="131" y1="114" x2="131" y2="140" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <line x1="269" y1="86" x2="269" y2="140" stroke="#f59e0b" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <path d="M 361 86 L 361 114 L 453 114 L 453 86" fill="none" stroke="#10b981" stroke-width="2.5"/>
+                  <line x1="407" y1="114" x2="407" y2="140" stroke="#10b981" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <!-- 3 Segmented Compound Words -->
+                  <g transform="translate(45, 142)">
+                    <rect x="14" y="0" width="144" height="62" rx="10" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2"/>
+                    <text x="86" y="25" fill="#e0f2fe" font-size="14" font-weight="700" text-anchor="middle">Học_sinh</text>
+                    <text x="86" y="46" fill="#7dd3fc" font-size="12" text-anchor="middle">Danh từ (N) • Chủ ngữ</text>
+
+                    <rect x="178" y="0" width="92" height="62" rx="10" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="224" y="25" fill="#fef3c7" font-size="14" font-weight="700" text-anchor="middle">học</text>
+                    <text x="224" y="46" fill="#fcd34d" font-size="12" text-anchor="middle">Động từ (V) • Root</text>
+
+                    <rect x="290" y="0" width="144" height="62" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                    <text x="362" y="25" fill="#d1fae5" font-size="14" font-weight="700" text-anchor="middle">sinh_học</text>
+                    <text x="362" y="46" fill="#6ee7b7" font-size="12" text-anchor="middle">Danh từ (N) • Tân ngữ</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Bảng Đối Chiếu Quy Tắc Đặt Dấu Thanh: Kiểu Cũ (<code>hòa, khỏe, thủy</code>) vs. Kiểu Mới (<code>hoà, khoẻ, thuỷ</code>)</h3>
+            <div class="comparison-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Đặc điểm</th>
+                    <th>Quy tắc Kiểu Cũ (<code>style="old"</code>)</th>
+                    <th>Quy tắc Kiểu Mới (<code>style="new"</code>)</th>
+                    <th>Ngoại lệ bắt buộc</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Vị trí đặt dấu (oa, oe, uy cuối âm tiết)</strong></td>
+                    <td>Đặt trên nguyên âm đầu: <code>hòa bình</code>, <code>sức khỏe</code>, <code>thủy lợi</code></td>
+                    <td>Đặt trên nguyên âm chính: <code>hoà bình</code>, <code>sức khoẻ</code>, <code>thuỷ lợi</code></td>
+                    <td>Sau phụ âm <strong><code>qu</code></strong> luôn đặt dấu trên <strong><code>y</code></strong>: <code>quý giá</code>, <code>ma quỷ</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tương thích mô hình NLP</strong></td>
+                    <td><span class="tag-emerald">✓ Chuẩn của VnCoreNLP, PhoW2V, PhoBERT</span></td>
+                    <td>Thường gặp trên văn bản người dùng gõ trên macOS/iOS</td>
+                    <td>Nếu truyền <code>hoà_bình</code> vào PhoBERT dễ bị tách vụn subword!</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Sandbox Stage 1 -->
+        <div class="tab-panel" data-panel="sandbox">
+          <div class="card">
+            <div class="sandbox-header">
+              <div class="card-title-row">
+                <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-code-2"></use></svg></span>
+                <div>
+                  <h3>Phòng Thí Nghiệm 1A: Mổ xẻ Unicode NFC/NFD, Dấu thanh &amp; Làm sạch Văn bản</h3>
+                  <p class="muted">Kết nối trực tiếp tới module Python <code>01_Foundations_Preprocessing/vn_preprocessing.py</code></p>
+                </div>
+              </div>
+              <div class="preset-btns">
+                <button class="btn-chip" type="button" data-preset-s1="GV&#8203; dạy rất nhiệt tình, ko hiểu chỗ nào đều đc giải đáp vs thái độ hoà nhã.">Mẫu lỗi UIT-VSFC (Teencode + Zero-width + Hoà)</button>
+                <button class="btn-chip" type="button" data-preset-s1="Bộ thuỷ sản khuyến khích nuôi trồng thuỷ hải sản và những điều quý giá.">Mẫu dấu thanh (thuỷ vs quý)</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <textarea id="s1InputText" rows="2" class="input-area" aria-label="Văn bản tiếng Việt cần chuẩn hóa">GV&#8203; dạy rất nhiệt tình, ko hiểu chỗ nào đều đc giải đáp vs thái độ hoà nhã.</textarea>
+            </div>
+
+            <div class="controls-bar">
+              <label class="control-item">
+                <span>Chuẩn dấu thanh:</span>
+                <select id="s1ToneStyle">
+                  <option value="old" selected>Kiểu Cũ (hòa, khỏe, thủy — Chuẩn PhoBERT)</option>
+                  <option value="new">Kiểu Mới (hoà, khoẻ, thuỷ)</option>
+                </select>
+              </label>
+              <label class="control-item">
+                <input type="checkbox" id="s1ExpandTeencode" checked />
+                <span>Giải mã Teencode (gv, sv, ko, đc, vs...)</span>
+              </label>
+              <label class="control-item">
+                <input type="checkbox" id="s1Lowercase" />
+                <span>Chuyển chữ thường (Lowercase)</span>
+              </label>
+              <button class="btn-primary" id="runPreprocessBtn" type="button">
+                <svg class="svg-icon" width="15" height="15"><use href="#ic-play"></use></svg>
+                <span>Chạy Chuẩn Hóa Python</span>
+              </button>
+            </div>
+
+            <div class="result-grid" id="s1PreprocessResult"></div>
+          </div>
+
+          <div class="card">
+            <div class="sandbox-header">
+              <div class="card-title-row">
+                <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-git-branch"></use></svg></span>
+                <div>
+                  <h3>Phòng Thí Nghiệm 1B: Tách từ Tiếng Việt (Word Segmentation), POS Tagging &amp; Dependency</h3>
+                  <p class="muted">So sánh tách theo âm tiết (Syllables) với tách từ ghép (<code>_</code>) và cây cú pháp phụ thuộc</p>
+                </div>
+              </div>
+              <div class="preset-btns">
+                <button class="btn-chip" type="button" data-preset-seg="Học sinh học sinh học tại trường trung học phổ thông.">Câu kinh điển: Học sinh học sinh học</button>
+                <button class="btn-chip" type="button" data-preset-seg="Viện Nghiên cứu Trí tuệ Nhân tạo VinAI tại Hà Nội vừa công bố mô hình PhoBERT.">Câu tên riêng &amp; thuật ngữ NLP</button>
+                <button class="btn-chip" type="button" data-preset-seg="Ông già đi nhanh quá bên cạnh chiếc bàn là quần áo.">Câu nhập nhằng: Ông già / bàn là</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <input type="text" id="s1SegInput" class="input-text" aria-label="Câu tiếng Việt cần tách từ" value="Học sinh học sinh học tại trường trung học phổ thông." />
+              <button class="btn-primary" id="runSegmentBtn" type="button">
+                <svg class="svg-icon" width="15" height="15"><use href="#ic-search"></use></svg>
+                <span>Phân Tích Từ &amp; Cú Pháp</span>
+              </button>
+            </div>
+
+            <div id="s1SegmentResult" class="mt-16"></div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Exercises & Quiz Stage 1 -->
+        <div class="tab-panel" data-panel="exercise">
+          <div class="card">
+            <div class="card-title-row">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-award"></use></svg></span>
+              <div>
+                <h3>Bài Tập Thực Hành Giai đoạn 1: Thiết kế Pipeline Tiền xử lý cho <code>PhoBERT-base-v2</code></h3>
+                <p class="muted">
+                  Bạn nhận được tập dữ liệu bình luận sinh viên thu thập từ biểu mẫu web (chứa ký tự tổ hợp NFD từ macOS và dấu thanh kiểu mới <code>hoà, thuỷ</code>). Hãy chọn cấu hình đúng trước khi đưa vào Tokenizer của <code>PhoBERT</code>:
+                </p>
+              </div>
+            </div>
+            <div class="exercise-form">
+              <div class="form-group">
+                <label for="ex1Unicode">1. Chuẩn hóa bảng mã Unicode:</label>
+                <select id="ex1Unicode">
+                  <option value="NFC">NFC — Unicode Dựng sẵn (1 ký tự cho chữ 'ệ')</option>
+                  <option value="NFD">NFD — Unicode Tổ hợp (tách rời chữ cái và dấu thanh)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ex1Tone">2. Quy tắc vị trí dấu thanh (oa, oe, uy):</label>
+                <select id="ex1Tone">
+                  <option value="old">Kiểu Cũ ('hòa bình', 'thủy lợi')</option>
+                  <option value="new">Kiểu Mới ('hoà bình', 'thuỷ lợi')</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ex1Seg">3. Chế độ Tách từ (Word Segmentation):</label>
+                <select id="ex1Seg">
+                  <option value="vncorenlp_underscore">Tách từ ghép nối bằng dấu gạch dưới '_' (VnCoreNLP / RDRSegmenter)</option>
+                  <option value="raw_syllables">Giữ nguyên khoảng trắng giữa các âm tiết</option>
+                </select>
+              </div>
+              <button class="btn-success" id="submitEx1Btn" type="button">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-check-circle"></use></svg>
+                <span>Chấm Điểm Bài Tập Thực Hành (+100 XP)</span>
+              </button>
+            </div>
+            <div id="ex1Feedback" class="feedback-box" hidden></div>
+          </div>
+
+          <div class="card" id="quizContainer1"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- STAGE 2: CLASSICAL NLP & WORD EMBEDDINGS (2D CANVAS)               -->
+      <!-- ================================================================== -->
+      <section class="stage-view" id="stage-2">
+        <div class="tab-panel active" data-panel="visual">
+          <div class="card hero-card">
+            <div class="hero-header">
+              <div>
+                <span class="stage-pill">GIAI ĐOẠN 02 • TUẦN 2</span>
+                <h2 id="stage-heading-2" tabindex="-1">Biểu diễn Văn bản Tiếng Việt: Từ TF-IDF đến Không gian Vector <code>PhoW2V</code></h2>
+                <p class="hero-desc">
+                  Làm thế nào để máy tính hiểu rằng <strong><code>"giảng_viên"</code></strong> gần nghĩa với <strong><code>"sinh_viên"</code></strong> hơn là <strong><code>"bàn_là"</code></strong>?
+                  Chúng ta chuyển từ biểu diễn tần suất từ khóa (<strong>TF-IDF Sparse Vector</strong>) sang không gian nhúng liên tục (<strong>Dense Word Embeddings</strong>).
+                </p>
+              </div>
+              <div class="hero-stat-box">
+                <div class="stat-num">300D</div>
+                <div class="stat-caption">Không gian Vector liên tục của PhoW2V huấn luyện trên 20GB văn bản tiếng Việt</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-steps-row">
+            <div class="step-card" style="--stagger: 1">
+              <div class="step-badge">Bước 1</div>
+              <h4>Tách từ Ghép Chuẩn</h4>
+              <p>Chuyển câu thành chuỗi từ vựng có nghĩa (<code>giảng_viên</code>, <code>nhiệt_tình</code>, <code>dễ_hiểu</code>).</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 2">
+              <div class="step-badge">Bước 2</div>
+              <h4>Ánh xạ Vector Nhúng (<span class="math-var">v<sub>w</sub> ∈ ℝ<sup>d</sup></span>)</h4>
+              <p>Mỗi từ trở thành một điểm tọa độ trong không gian nhiều chiều (Word2Vec Skip-gram / PhoW2V).</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 3">
+              <div class="step-badge">Bước 3</div>
+              <h4>Đo Góc Cosine <span class="math-var">cos(θ)</span></h4>
+              <p>Hai từ cùng ngữ cảnh có góc <span class="math-var">θ → 0°</span> dẫn tới <span class="math-var">cos(θ) → 1.0</span>.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3>1. TF-IDF Kết hợp Tách từ Tiếng Việt</h3>
+              <p class="muted">Công thức tính trọng số TF-IDF của từ ghép <span class="math-var">t</span> trong văn bản <span class="math-var">d</span> thuộc tập <span class="math-var">D</span>:</p>
+              <div class="formula-box">
+                <div class="math-eq" role="math" aria-label="Công thức TF-IDF">
+                  <span class="math-func">TF-IDF</span><span>(<i>t</i>, <i>d</i>, <i>D</i>)</span>
+                  <span class="math-op">=</span>
+                  <span class="math-func">TF</span><span>(<i>t</i>, <i>d</i>)</span>
+                  <span class="math-op">×</span>
+                  <span>&#91;</span>
+                  <span class="math-func">ln</span>
+                  <span class="math-frac">
+                    <span class="math-frac-num">1 + |<i>D</i>|</span>
+                    <span class="math-frac-den">1 + <span class="math-func">DF</span>(<i>t</i>)</span>
+                  </span>
+                  <span class="math-op">+</span>
+                  <span>1 &#93;</span>
+                </div>
+                <div class="formula-legend">
+                  <span class="legend-pill"><strong>TF(<i>t</i>, <i>d</i>):</strong> Tần suất từ <i>t</i> trong câu <i>d</i></span>
+                  <span class="legend-pill"><strong>|<i>D</i>|:</strong> Tổng số câu</span>
+                  <span class="legend-pill"><strong>DF(<i>t</i>):</strong> Số câu chứa từ <i>t</i></span>
+                </div>
+              </div>
+              <ul class="bullet-list">
+                <li><strong>Tại sao phải tách từ trước khi tính TF-IDF?</strong> Nếu không tách từ, câu <em>"Học sinh học sinh học"</em> chỉ sinh ra 2 unigram là <code>học</code> và <code>sinh</code>. Khi tách từ thành <code>Học_sinh học sinh_học</code>, ma trận TF-IDF giữ trọn vẹn khái niệm <code>học_sinh</code> và <code>sinh_học</code>.</li>
+                <li>Kết hợp <code>ngram_range=(1, 2)</code> + <code>LinearSVC</code> / <code>LogisticRegression</code> đạt tới <strong>~89.4% Macro-F1</strong> trên tập <code>UIT-VSFC</code> với tốc độ huấn luyện chỉ 3 giây trên CPU!</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>2. Độ tương đồng Cosine trong Không gian <code>PhoW2V</code></h3>
+              <p class="muted">Mỗi từ tiếng Việt được ánh xạ thành một vector đặc <span class="math-var"><b>u</b>, <b>v</b> ∈ ℝ<sup>100 hoặc 300</sup></span>:</p>
+              <div class="formula-box">
+                <div class="math-eq" role="math" aria-label="Công thức Cosine Similarity">
+                  <span class="math-func">CosineSim</span><span>(<b>u</b>, <b>v</b>)</span>
+                  <span class="math-op">=</span>
+                  <span class="math-frac">
+                    <span class="math-frac-num"><b>u</b> · <b>v</b></span>
+                    <span class="math-frac-den">‖<b>u</b>‖<sub>2</sub> × ‖<b>v</b>‖<sub>2</sub></span>
+                  </span>
+                  <span class="math-op">=</span>
+                  <span>cos(<i>θ</i>) ∈ [−1, 1]</span>
+                </div>
+                <div class="formula-legend">
+                  <span class="legend-pill"><strong><b>u</b> · <b>v</b>:</strong> Tích vô hướng 2 vector</span>
+                  <span class="legend-pill"><strong>cos(<i>θ</i>) ≈ 1:</strong> Đồng nghĩa</span>
+                  <span class="legend-pill"><strong>cos(<i>θ</i>) ≈ 0:</strong> Khác chủ đề</span>
+                </div>
+              </div>
+              <ul class="bullet-list">
+                <li><strong>Skip-gram (Word2Vec):</strong> Dự đoán các từ ngữ cảnh xung quanh từ trung tâm <span class="math-var">w<sub>t</sub></span>.</li>
+                <li><strong>PhoW2V (VinAI Research):</strong> Được huấn luyện trên 20GB văn bản tiếng Việt (Wikipedia + News) đã tách từ bằng <code>VnCoreNLP</code>, tạo thành các cụm ngữ nghĩa sắc nét.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Sandbox Stage 2 (Interactive 2D Embedding Canvas) -->
+        <div class="tab-panel" data-panel="sandbox">
+          <div class="card">
+            <div class="sandbox-header">
+              <div class="card-title-row">
+                <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-network"></use></svg></span>
+                <div>
+                  <h3>Phòng Thí Nghiệm 2A: Tương tác Không gian Vector 2D (Animated <code>PhoW2V</code> Projection)</h3>
+                  <p class="muted"><strong>Click trực tiếp vào bất kỳ điểm từ nào trên biểu đồ Canvas</strong> để xem chuyển động nội suy Spring và 5 từ có Cosine Similarity cao nhất!</p>
+                </div>
+              </div>
+              <div class="preset-btns">
+                <button class="btn-chip" type="button" data-word-select="giảng_viên">Từ: giảng_viên</button>
+                <button class="btn-chip" type="button" data-word-select="phobert">Từ: phobert</button>
+                <button class="btn-chip" type="button" data-word-select="nhiệt_tình">Từ: nhiệt_tình</button>
+                <button class="btn-chip" type="button" data-word-select="hà_nội">Từ: hà_nội</button>
+              </div>
+            </div>
+
+            <div class="embedding-lab-layout">
+              <div class="canvas-wrapper">
+                <canvas id="embeddingCanvas" width="620" height="430"></canvas>
+                <div class="canvas-legend">
+                  <span><i class="dot dot-edu"></i> Giáo dục (UIT-VSFC)</span>
+                  <span><i class="dot dot-nlp"></i> Mô hình NLP &amp; AI</span>
+                  <span><i class="dot dot-pos"></i> Cảm xúc Tích cực</span>
+                  <span><i class="dot dot-neg"></i> Cảm xúc Tiêu cực</span>
+                  <span><i class="dot dot-loc"></i> Địa danh &amp; Tổ chức</span>
+                </div>
+              </div>
+
+              <div class="embedding-inspector">
+                <div class="selected-word-header">
+                  <span>Vector trung tâm:</span>
+                  <strong id="selectedWordTitle" class="highlight-token">giảng_viên</strong>
+                </div>
+                <p class="muted">Top 5 từ vựng gần nhất theo Cosine Similarity <span class="math-var">cos(θ)</span>:</p>
+                <div id="neighborsList" class="neighbors-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title-row mb-10">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-terminal"></use></svg></span>
+              <div>
+                <h3>Phòng Thí Nghiệm 2B: Phân tích Cảm xúc Phản hồi Sinh viên (<code>UIT-VSFC</code> Classifier)</h3>
+                <p class="muted">Nhập câu phản hồi sinh viên để xem quá trình Tách từ + Trích xuất đặc trưng TF-IDF + Dự đoán xác suất nhãn cảm xúc:</p>
+              </div>
+            </div>
+            <div class="preset-btns mb-10">
+              <button class="btn-chip" type="button" data-sent-sample="Giảng viên dạy rất nhiệt tình, dễ hiểu và luôn giải đáp thắc mắc cho sinh viên.">Mẫu Tích cực (Positive)</button>
+              <button class="btn-chip" type="button" data-sent-sample="Phòng máy tính cấu hình hơi yếu, chạy mô hình học sâu rất chậm và khó hiểu.">Mẫu Tiêu cực (Negative)</button>
+              <button class="btn-chip" type="button" data-sent-sample="Môn học kéo dài trong 15 tuần với 3 tín chỉ lý thuyết và 1 tín chỉ thực hành.">Mẫu Trung tính (Neutral)</button>
+            </div>
+            <div class="form-row">
+              <input type="text" id="s2SentimentInput" class="input-text" aria-label="Câu phản hồi sinh viên" value="Giảng viên dạy rất nhiệt tình, dễ hiểu và luôn giải đáp thắc mắc cho sinh viên." />
+              <button class="btn-primary" id="runSentimentBtn" type="button">
+                <svg class="svg-icon" width="15" height="15"><use href="#ic-play"></use></svg>
+                <span>Phân Loại Cảm Xúc</span>
+              </button>
+            </div>
+            <div id="s2SentimentResult" class="mt-16"></div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Exercises & Quiz Stage 2 -->
+        <div class="tab-panel" data-panel="exercise">
+          <div class="card">
+            <div class="card-title-row">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-award"></use></svg></span>
+              <div>
+                <h3>Bài Tập Thực Hành Giai đoạn 2: Tách từ Chuẩn cho Ma trận Đặc trưng TF-IDF &amp; PhoW2V</h3>
+                <p class="muted">
+                  Cho câu tiếng Việt gây nhập nhằng: <strong><code>"Học sinh học sinh học"</code></strong>. Hãy viết chuỗi kết quả sau khi tách từ (nối các âm tiết của từ ghép bằng dấu <code>_</code>) để mô hình phân biệt được chủ ngữ <em>(student)</em> và môn học <em>(biology)</em>:
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <input type="text" id="ex2SegAnswer" class="input-text" aria-label="Câu trả lời tách từ" placeholder="Ví dụ: Học_sinh ..." value="Học_sinh học sinh_học" />
+              <button class="btn-success" id="submitEx2Btn" type="button">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-check-circle"></use></svg>
+                <span>Kiểm Tra &amp; Chấm Điểm (+100 XP)</span>
+              </button>
+            </div>
+            <div id="ex2Feedback" class="feedback-box" hidden></div>
+          </div>
+
+          <div class="card" id="quizContainer2"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- STAGE 3: PRETRAINED TRANSFORMERS (PHOBERT, PHONLP, VIT5)           -->
+      <!-- ================================================================== -->
+      <section class="stage-view" id="stage-3">
+        <div class="tab-panel active" data-panel="visual">
+          <div class="card hero-card">
+            <div class="hero-header">
+              <div>
+                <span class="stage-pill">GIAI ĐOẠN 03 • TUẦN 3 - 4</span>
+                <h2 id="stage-heading-3" tabindex="-1">Pretrained Transformers Tiếng Việt: <code>PhoBERT</code>, <code>PhoNLP</code> &amp; <code>VietAI/vit5</code></h2>
+                <p class="hero-desc">
+                  Nắm vững sự khác biệt cốt lõi giữa kiến trúc <strong>Encoder-only (<code>PhoBERT-base-v2</code>)</strong> cho phân loại văn bản &amp; NER và <strong>Encoder-Decoder (<code>ViT5</code>)</strong> cho tóm tắt &amp; dịch máy.
+                </p>
+              </div>
+              <div class="hero-stat-box">
+                <div class="stat-num">93.8%</div>
+                <div class="stat-caption">Macro-F1 của PhoBERT-base-v2 trên tập UIT-VSFC</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3>1. Kiến trúc <code>PhoBERT</code> &amp; Subword Label Alignment (NER)</h3>
+              <p class="muted">Khi từ ghép dài bị BPE chia nhỏ bằng dấu <code>@@</code>, nhãn IOB2 được căn chỉnh như thế nào?</p>
+              <div class="svg-diagram-box">
+                <svg viewBox="0 0 540 225" class="edu-svg" role="img" aria-label="Minh họa Subword Label Alignment cho từ Viện_Nghiên_cứu">
+                  <text x="270" y="25" fill="#cbd5e1" font-size="12.5" font-weight="600" text-anchor="middle">Từ đã tách (VnCoreNLP): "Viện_Nghiên_cứu" (Nhãn gốc: B-ORGANIZATION)</text>
+                  <rect x="170" y="36" width="200" height="36" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="270" y="59" fill="#e0f2fe" font-size="14" font-weight="700" text-anchor="middle">Viện_Nghiên_cứu</text>
+
+                  <line x1="230" y1="72" x2="155" y2="105" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
+                  <line x1="310" y1="72" x2="385" y2="105" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4,4"/>
+
+                  <!-- Subword 1 -->
+                  <rect x="55" y="105" width="200" height="40" rx="8" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="155" y="130" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">Subword 1: Viện_Nghiên_@@</text>
+
+                  <!-- Subword 2 -->
+                  <rect x="285" y="105" width="200" height="40" rx="8" fill="#3f2e1e" stroke="#f59e0b" stroke-width="2"/>
+                  <text x="385" y="130" fill="#fde68a" font-size="13" font-weight="700" text-anchor="middle">Subword 2: cứu</text>
+
+                  <!-- Loss Labels -->
+                  <rect x="55" y="160" width="200" height="46" rx="8" fill="#064e3b" stroke="#10b981"/>
+                  <text x="155" y="180" fill="#6ee7b7" font-size="12" font-weight="700" text-anchor="middle">✓ Label: B-ORGANIZATION (id=1)</text>
+                  <text x="155" y="197" fill="#a7f3d0" font-size="12" text-anchor="middle">Tính đạo hàm CrossEntropy</text>
+
+                  <rect x="285" y="160" width="200" height="46" rx="8" fill="#4c0519" stroke="#f43f5e"/>
+                  <text x="385" y="180" fill="#fda4af" font-size="12" font-weight="700" text-anchor="middle">✗ Label: -100 (Ignore Index)</text>
+                  <text x="385" y="197" fill="#fecdd3" font-size="12" text-anchor="middle">Bỏ qua khi tính Loss</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>2. So sánh <code>PhoBERT-base-v2</code> vs. <code>VietAI/vit5-base</code></h3>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Tiêu chí</th>
+                    <th><code>vinai/phobert-base-v2</code></th>
+                    <th><code>VietAI/vit5-base</code></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Kiến trúc</strong></td>
+                    <td>Encoder-only (RoBERTa)</td>
+                    <td>Encoder-Decoder (T5)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Yêu cầu tách từ (<code>_</code>)</strong></td>
+                    <td><span class="tag-rose">! BẮT BUỘC (VnCoreNLP)</span></td>
+                    <td><span class="tag-emerald">✓ KHÔNG (Văn bản tự nhiên)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Độ dài tối đa (Max Length)</strong></td>
+                    <td><strong>256 subwords</strong> (<code>max_pos=258</code>)</td>
+                    <td><strong>1024+ subwords</strong> (Relative Pos)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bài toán thế mạnh</strong></td>
+                    <td>Phân loại cảm xúc (UIT-VSFC), NER, POS</td>
+                    <td>Tóm tắt văn bản (VietNews), Sinh câu, QA</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Sandbox Stage 3 -->
+        <div class="tab-panel" data-panel="sandbox">
+          <div class="card">
+            <div class="sandbox-header">
+              <div class="card-title-row">
+                <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-cpu"></use></svg></span>
+                <div>
+                  <h3>Phòng Thí Nghiệm 3: So sánh Trực tiếp Tokenizer <code>PhoBERT</code> vs. <code>ViT5</code> vs. <code>Qwen2.5</code> &amp; Subword Alignment</h3>
+                  <p class="muted">Quan sát cách cùng một câu tiếng Việt được biến đổi qua 3 thế hệ mô hình khác nhau</p>
+                </div>
+              </div>
+              <div class="preset-btns">
+                <button class="btn-chip" type="button" data-tok-sample="Viện Nghiên cứu Trí tuệ Nhân tạo VinAI tại Hà Nội vừa công bố mô hình PhoBERT.">Mẫu NER &amp; Tổ chức</button>
+                <button class="btn-chip" type="button" data-tok-sample="Bệnh nhân điều trị tại Bệnh viện Chợ Rẫy, TP. Hồ Chí Minh sức khỏe đã ổn định.">Mẫu Y tế (PhoNER)</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <input type="text" id="s3TokenInput" class="input-text" aria-label="Câu tiếng Việt cần so sánh Tokenizer" value="Viện Nghiên cứu Trí tuệ Nhân tạo VinAI tại Hà Nội vừa công bố mô hình PhoBERT." />
+              <button class="btn-primary" id="runTokenCompareBtn" type="button">
+                <svg class="svg-icon" width="15" height="15"><use href="#ic-play"></use></svg>
+                <span>So Sánh Tokenizers &amp; NER Alignment</span>
+              </button>
+            </div>
+
+            <div id="s3TokenResult" class="mt-16"></div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Exercises & Quiz Stage 3 -->
+        <div class="tab-panel" data-panel="exercise">
+          <div class="card">
+            <div class="card-title-row">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-award"></use></svg></span>
+              <div>
+                <h3>Bài Tập Thực Hành Giai đoạn 3: Gán nhãn Subword Alignment cho <code>PhoBERT NER</code></h3>
+                <p class="muted">
+                  Giả sử từ ghép <strong><code>"Viện_Nghiên_cứu"</code></strong> có nhãn thực thể là <code>B-ORGANIZATION</code>. Khi qua BPE Tokenizer của PhoBERT, từ này bị tách thành 2 subword: <code>["Viện_Nghiên_@@", "cứu"]</code>. Hãy chọn nhãn huấn luyện cho từng subword:
+                </p>
+              </div>
+            </div>
+            <div class="exercise-form">
+              <div class="form-group">
+                <label for="ex3FirstSub">Nhãn của Subword thứ 1 (<code>"Viện_Nghiên_@@"</code>):</label>
+                <select id="ex3FirstSub">
+                  <option value="B-ORGANIZATION">B-ORGANIZATION (Giữ nhãn gốc của từ)</option>
+                  <option value="-100">-100 (Ignore Index)</option>
+                  <option value="O">O (Outside)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ex3SecondSub">Nhãn của Subword thứ 2 (<code>"cứu"</code>):</label>
+                <select id="ex3SecondSub">
+                  <option value="-100">-100 (Ignore Index trong CrossEntropyLoss)</option>
+                  <option value="B-ORGANIZATION">B-ORGANIZATION</option>
+                  <option value="O">O (Outside)</option>
+                </select>
+              </div>
+              <button class="btn-success" id="submitEx3Btn" type="button">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-check-circle"></use></svg>
+                <span>Chấm Điểm Bài Tập Thực Hành (+100 XP)</span>
+              </button>
+            </div>
+            <div id="ex3Feedback" class="feedback-box" hidden></div>
+          </div>
+
+          <div class="card" id="quizContainer3"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- STAGE 4: VIETNAMESE LLMS, QLORA & AGENTIC RAG (LANGGRAPH)          -->
+      <!-- ================================================================== -->
+      <section class="stage-view" id="stage-4">
+        <div class="tab-panel active" data-panel="visual">
+          <div class="card hero-card">
+            <div class="hero-header">
+              <div>
+                <span class="stage-pill">GIAI ĐOẠN 04 • TUẦN 5 - 6</span>
+                <h2 id="stage-heading-4" tabindex="-1">Kỷ nguyên LLM Tiếng Việt: Tinh chỉnh nhẹ <code>QLoRA</code> &amp; Hệ thống <code>Agentic RAG</code></h2>
+                <p class="hero-desc">
+                  Kết hợp các mô hình ngôn ngữ lớn hỗ trợ tiếng Việt xuất sắc (<strong><code>Qwen2.5</code>, <code>Sailor2</code>, <code>ura-hcmut</code></strong>) với kỹ thuật <strong>QLoRA 4-bit</strong> và kiến trúc <strong>Hybrid Agentic RAG (BM25 tách từ + BGE-M3 + LangGraph)</strong>.
+                </p>
+              </div>
+              <div class="hero-stat-box">
+                <div class="stat-num">-72%</div>
+                <div class="stat-caption">Mức tiết kiệm VRAM khi Fine-tune LLM 7B bằng QLoRA 4-bit NF4</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- QLoRA Architecture Diagram -->
+            <div class="card">
+              <h3>1. Cơ chế QLoRA: 4-bit NormalFloat (NF4) + Low-Rank Adapters</h3>
+              <p class="muted">Đóng băng trọng số gốc <span class="math-var">W<sub>0</sub></span> ở dạng 4-bit và chỉ huấn luyện 2 ma trận hạng thấp <span class="math-var">A, B</span> (với <span class="math-var">r ≪ d</span>):</p>
+              <div class="formula-box">
+                <div class="math-eq" role="math" aria-label="Công thức QLoRA Forward Pass">
+                  <span><b>h</b></span>
+                  <span class="math-op">=</span>
+                  <span class="math-term-group frozen">
+                    <span><b>W</b><sub>0</sub><sup>(4-bit NF4)</sup> · <b>x</b></span>
+                    <span class="math-term-caption">[Frozen] Đóng băng (~4.5GB)</span>
+                  </span>
+                  <span class="math-op">+</span>
+                  <span class="math-term-group trainable">
+                    <span>
+                      <span class="math-frac">
+                        <span class="math-frac-num"><i>α</i></span>
+                        <span class="math-frac-den"><i>r</i></span>
+                      </span>
+                      · (<b>B</b> × <b>A</b>) · <b>x</b>
+                    </span>
+                    <span class="math-term-caption">[Trainable] Nhánh LoRA (~1% tham số)</span>
+                  </span>
+                </div>
+                <div class="formula-legend">
+                  <span class="legend-pill"><strong>W<sub>0</sub>:</strong> Trọng số gốc 4-bit</span>
+                  <span class="legend-pill"><strong>B ∈ ℝ<sup>d×r</sup>, A ∈ ℝ<sup>r×k</sup>:</strong> Adapter hạng thấp</span>
+                  <span class="legend-pill"><strong>α / r:</strong> Hệ số tỉ lệ LoRA</span>
+                </div>
+              </div>
+              <div class="svg-diagram-box">
+                <svg viewBox="0 0 540 190" class="edu-svg" role="img" aria-label="Sơ đồ QLoRA đóng băng trọng số 4-bit NF4 và huấn luyện nhánh LoRA A, B">
+                  <!-- Base Weight W0 -->
+                  <rect x="30" y="25" width="205" height="130" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                  <text x="132" y="72" fill="#f8fafc" font-size="14" font-weight="700" text-anchor="middle">Pretrained Weights W₀</text>
+                  <text x="132" y="96" fill="#38bdf8" font-size="12.5" font-weight="600" text-anchor="middle">Quantized 4-bit NF4 (~4.5 GB)</text>
+                  <text x="132" y="122" fill="#cbd5e1" font-size="12" text-anchor="middle">[Frozen] requires_grad = False</text>
+
+                  <!-- LoRA Branch A and B -->
+                  <path d="M 275 142 L 335 95 L 275 48 Z" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                  <text x="395" y="48" fill="#6ee7b7" font-size="13" font-weight="700" text-anchor="middle">Ma trận B (d × r)</text>
+                  <rect x="325" y="56" width="145" height="32" rx="6" fill="#065f46" stroke="#10b981"/>
+                  <text x="397" y="77" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Rank r = 16 (BF16)</text>
+
+                  <rect x="325" y="100" width="145" height="32" rx="6" fill="#065f46" stroke="#10b981"/>
+                  <text x="397" y="121" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Ma trận A (r × k)</text>
+                  <text x="397" y="154" fill="#34d399" font-size="12.5" font-weight="700" text-anchor="middle">✓ Chỉ train ~40M tham số!</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Hybrid Agentic RAG Diagram -->
+            <div class="card">
+              <h3>2. Luồng Đồ thị <code>LangGraph Agentic Self-RAG</code> Tiếng Việt</h3>
+              <p class="muted">Kết hợp tìm kiếm từ khóa chính xác (BM25 đã tách từ) + Ngữ nghĩa (BGE-M3) + Tự kiểm định chống ảo giác:</p>
+              <div class="svg-diagram-box">
+                <svg viewBox="0 0 540 220" class="edu-svg" role="img" aria-label="Sơ đồ LangGraph Agentic RAG gồm 4 nút Query, Hybrid Search, Doc Grader, Generate">
+                  <!-- Nodes -->
+                  <rect x="18" y="80" width="108" height="54" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="72" y="103" fill="#e0f2fe" font-size="12" font-weight="700" text-anchor="middle">1. Query Input</text>
+                  <text x="72" y="122" fill="#7dd3fc" font-size="12" text-anchor="middle">NFC + Tách từ</text>
+
+                  <line x1="126" y1="107" x2="154" y2="107" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <rect x="154" y="65" width="128" height="84" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+                  <text x="218" y="90" fill="#f3e8ff" font-size="12" font-weight="700" text-anchor="middle">2. Hybrid Search</text>
+                  <text x="218" y="110" fill="#d8b4fe" font-size="12" text-anchor="middle">• BM25 (Word Seg)</text>
+                  <text x="218" y="128" fill="#d8b4fe" font-size="12" text-anchor="middle">• Dense (BGE-M3)</text>
+
+                  <line x1="282" y1="107" x2="308" y2="107" stroke="#a855f7" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <rect x="308" y="75" width="108" height="64" rx="10" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+                  <text x="362" y="100" fill="#fef3c7" font-size="12" font-weight="700" text-anchor="middle">3. Doc Grader</text>
+                  <text x="362" y="120" fill="#fde68a" font-size="12" text-anchor="middle">Score &gt;= 0.42?</text>
+
+                  <line x1="416" y1="107" x2="440" y2="107" stroke="#10b981" stroke-width="2.5" class="svg-flow-line"/>
+
+                  <rect x="440" y="80" width="86" height="54" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                  <text x="483" y="103" fill="#d1fae5" font-size="12" font-weight="700" text-anchor="middle">4. Generate</text>
+                  <text x="483" y="122" fill="#6ee7b7" font-size="12" text-anchor="middle">Qwen / Gemini</text>
+
+                  <!-- Rewrite Loop -->
+                  <path d="M 362 75 L 362 30 L 72 30 L 72 80" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,4"/>
+                  <text x="217" y="22" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">Nếu không liên quan → Query Rewriter viết lại câu hỏi</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Sandbox Stage 4 -->
+        <div class="tab-panel" data-panel="sandbox">
+          <!-- Lab 4A: LangGraph Agentic RAG Simulator -->
+          <div class="card">
+            <div class="sandbox-header">
+              <div class="card-title-row">
+                <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-git-branch"></use></svg></span>
+                <div>
+                  <h3>Phòng Thí Nghiệm 4A: Mô phỏng Luồng <code>LangGraph Agentic Hybrid RAG</code> trên <code>UIT-ViQuAD 2.0</code></h3>
+                  <p class="muted">Thử nghiệm truy xuất lai (BM25 + Dense Vector) và xem hiệu ứng kích hoạt từng Node trong đồ thị trạng thái LangGraph</p>
+                </div>
+              </div>
+              <div class="preset-btns">
+                <button class="btn-chip" type="button" data-rag-q="Dữ liệu đầu vào của mô hình PhoBERT cần được tiền xử lý bằng công cụ tách từ nào?">Câu hỏi ViQuAD #1 (PhoBERT &amp; VnCoreNLP)</button>
+                <button class="btn-chip" type="button" data-rag-q="Tại sao khoảng trắng trong tiếng Việt không trực tiếp phân tách từ như tiếng Anh?">Câu hỏi ViQuAD #2 (Khoảng trắng &amp; Âm tiết)</button>
+                <button class="btn-chip" type="button" data-rag-q="Làm thế nào để giảm thiểu hiện tượng ảo giác khi triển khai LLM vào doanh nghiệp?">Câu hỏi VietNews #3 (Kiến trúc RAG)</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <input type="text" id="s4RagQuestion" class="input-text" aria-label="Câu hỏi tiếng Việt cho hệ thống RAG" value="Dữ liệu đầu vào của mô hình PhoBERT cần được tiền xử lý bằng công cụ tách từ nào?" />
+              <button class="btn-primary" id="runRagSimBtn" type="button">
+                <svg class="svg-icon" width="15" height="15"><use href="#ic-play"></use></svg>
+                <span>Chạy Đồ Thị LangGraph RAG</span>
+              </button>
+            </div>
+
+            <div class="controls-bar mt-10">
+              <label class="control-item">
+                <input type="checkbox" id="s4UseWordSeg" checked />
+                <span>Bật Tách từ Tiếng Việt (<code>_</code>) cho BM25</span>
+              </label>
+              <label class="control-item">
+                <span>Trọng số Dense Vector (<code>BGE-M3</code>): <strong id="s4DenseWeightVal">0.60</strong></span>
+                <input type="range" id="s4DenseWeight" min="0" max="1" step="0.1" value="0.6" />
+              </label>
+            </div>
+
+            <!-- Animated Visual Node Stepper for LangGraph -->
+            <div class="langgraph-live-nodes" id="langgraphNodeVisualizer">
+              <div class="lg-node" data-lg-step="0">
+                <span class="lg-node-num">1</span>
+                <span>Query &amp; Word Seg</span>
+              </div>
+              <div class="lg-connector"></div>
+              <div class="lg-node" data-lg-step="1">
+                <span class="lg-node-num">2</span>
+                <span>Hybrid Retriever</span>
+              </div>
+              <div class="lg-connector"></div>
+              <div class="lg-node" data-lg-step="2">
+                <span class="lg-node-num">3</span>
+                <span>Self-RAG Grader</span>
+              </div>
+              <div class="lg-connector"></div>
+              <div class="lg-node" data-lg-step="3">
+                <span class="lg-node-num">4</span>
+                <span>LLM Generator</span>
+              </div>
+            </div>
+
+            <div id="s4RagResult" class="mt-16"></div>
+          </div>
+
+          <!-- Lab 4B: Interactive QLoRA VRAM Calculator -->
+          <div class="card">
+            <div class="card-title-row">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-cpu"></use></svg></span>
+              <div>
+                <h3>Phòng Thí Nghiệm 4B: Máy tính Dung lượng VRAM Huấn luyện LLM Tiếng Việt (Full Fine-tune vs. LoRA vs. QLoRA)</h3>
+                <p class="muted">Ước tính chính xác bộ nhớ GPU cần thiết cho Trọng số gốc, LoRA Adapter và Activations</p>
+              </div>
+            </div>
+            <div class="controls-bar">
+              <label class="control-item">
+                <span>Mô hình cơ sở:</span>
+                <select id="vramModelSize">
+                  <option value="7" selected>Qwen2.5-7B-Instruct (7 tỷ tham số)</option>
+                  <option value="8">Sailor2-8B-Chat / URA-Llama-8B (8 tỷ tham số)</option>
+                  <option value="14">Qwen2.5-14B-Instruct (14 tỷ tham số)</option>
+                </select>
+              </label>
+              <label class="control-item">
+                <span>Phương pháp huấn luyện:</span>
+                <select id="vramMethod">
+                  <option value="qlora4" selected>QLoRA 4-bit (NF4 + Double Quant)</option>
+                  <option value="lora16">LoRA 16-bit (BF16 Base + Adapter)</option>
+                  <option value="full16">Full Fine-tuning (BF16 + AdamW 8-bit)</option>
+                </select>
+              </label>
+              <label class="control-item">
+                <span>LoRA Rank (r):</span>
+                <select id="vramLoraRank">
+                  <option value="8">r = 8</option>
+                  <option value="16" selected>r = 16 (Khuyên dùng)</option>
+                  <option value="32">r = 32</option>
+                  <option value="64">r = 64</option>
+                </select>
+              </label>
+            </div>
+            <div id="vramResultBox" class="mt-16"></div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Exercises & Quiz Stage 4 -->
+        <div class="tab-panel" data-panel="exercise">
+          <div class="card">
+            <div class="card-title-row">
+              <span class="icon-badge"><svg class="svg-icon" width="20" height="20"><use href="#ic-award"></use></svg></span>
+              <div>
+                <h3>Bài Tập Thực Hành Giai đoạn 4: Cấu hình Hệ thống Hybrid Agentic RAG Tiếng Việt</h3>
+                <p class="muted">
+                  Bạn đang xây dựng hệ thống hỏi đáp pháp luật &amp; học thuật tiếng Việt trên tập dữ liệu <code>UIT-ViQuAD 2.0</code>. Hãy chọn cấu hình kiến trúc tối ưu nhất:
+                </p>
+              </div>
+            </div>
+            <div class="exercise-form">
+              <div class="form-group">
+                <label for="ex4Bm25">1. Tiền xử lý cho nhánh tìm kiếm từ khóa BM25:</label>
+                <select id="ex4Bm25">
+                  <option value="true">Bật tách từ ghép tiếng Việt (pyvi / VnCoreNLP) trước khi lập chỉ mục BM25</option>
+                  <option value="false">Cắt theo khoảng trắng âm tiết đơn thuần</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ex4Dense">2. Mô hình Dense Embedding cho tiếng Việt:</label>
+                <select id="ex4Dense">
+                  <option value="bge-m3">BAAI/bge-m3 hoặc hiieu/halong_embedding (Hỗ trợ sâu tiếng Việt)</option>
+                  <option value="bert-ascii">bert-base-uncased (Chỉ hỗ trợ tiếng Anh ASCII)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ex4Grader">3. Cơ chế kiểm soát chất lượng trong LangGraph:</label>
+                <select id="ex4Grader">
+                  <option value="true">Thêm Node Document Grader (Self-RAG) + Query Rewriter khi tài liệu không khớp</option>
+                  <option value="false">Truyền thẳng mọi tài liệu tìm được vào LLM bất kể điểm số</option>
+                </select>
+              </div>
+              <button class="btn-success" id="submitEx4Btn" type="button">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-check-circle"></use></svg>
+                <span>Chấm Điểm Bài Tập Thực Hành (+100 XP)</span>
+              </button>
+            </div>
+            <div id="ex4Feedback" class="feedback-box" hidden></div>
+          </div>
+
+          <div class="card" id="quizContainer4"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

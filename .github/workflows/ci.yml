@@ -1,0 +1,47 @@
+name: Vietnamese NLP Mastery CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint-and-validate-notebooks:
+    name: Lint Code & Validate Notebooks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install linting & validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff nbformat pytest regex pandas numpy
+
+      - name: Lint Python files and Jupyter Notebooks with Ruff
+        run: |
+          ruff check .
+
+      - name: Validate Jupyter Notebook JSON Schema
+        run: |
+          python -c "
+          import glob, nbformat, sys
+          notebooks = glob.glob('**/*.ipynb', recursive=True)
+          print(f'Validating {len(notebooks)} notebooks...')
+          for nb_path in notebooks:
+              with open(nb_path, 'r', encoding='utf-8') as f:
+                  nb = nbformat.read(f, as_version=4)
+                  nbformat.validate(nb)
+              print(f'  [OK] {nb_path}')
+          "
+
+      - name: Run unit tests for preprocessing & dataset utilities
+        run: |
+          pytest tests/ -v
