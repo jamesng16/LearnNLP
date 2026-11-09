@@ -112,6 +112,13 @@
         <span>Trang chủ</span>
       </button>
 
+      <!-- Interactive Technical Term Glossary Button -->
+      <button class="btn-glossary-trigger" id="openGlossaryDrawerBtn" type="button" title="Tra cứu Từ điển Thuật ngữ Chuyên ngành NLP">
+        <svg class="svg-icon" width="16" height="16"><use href="#ic-book-open"></use></svg>
+        <span>Từ điển Thuật ngữ</span>
+        <span class="glossary-count-badge" id="glossaryCountBadge">75+</span>
+      </button>
+
       <!-- Theme Toggle (Light Editorial vs Dark Studio) -->
       <button class="btn-theme-toggle" id="themeToggleBtn" type="button" aria-label="Chuyển đổi giao diện Sáng / Tối">
         <svg class="svg-icon" id="themeSvgIcon" width="16" height="16"><use href="#ic-sun"></use></svg>
@@ -461,6 +468,25 @@
           <svg class="svg-icon" width="17" height="17"><use href="#ic-award"></use></svg>
           <span>3. Bài Tập Thực Chiến &amp; Quiz (+XP)</span>
         </button>
+      </div>
+
+      <!-- Interactive Technical Term Quick-Bar -->
+      <div class="glossary-quickbar" role="region" aria-label="Tra cứu nhanh thuật ngữ chuyên ngành">
+        <div class="glossary-quickbar-left">
+          <span class="glossary-pulse-dot" aria-hidden="true"></span>
+          <span><strong>Tra cứu Thuật ngữ Tương tác:</strong> Bấm vào bất kỳ từ chuyên ngành nào có gạch chân chấm bi trong bài học để xem định nghĩa &amp; ví dụ ngay lập tức:</span>
+        </div>
+        <div class="glossary-quickbar-chips">
+          <button type="button" class="glossary-quick-chip" data-glossary-key="rdrsegmenter">RDRSegmenter</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="scrdr">SCRDR</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="nfc">NFC vs NFD</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="crf">Linear-chain CRF</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="phobert">PhoBERT</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="subword-alignment">Subword Alignment (-100)</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="qlora">QLoRA &amp; NF4</button>
+          <button type="button" class="glossary-quick-chip" data-glossary-key="rrf">BM25 + RRF</button>
+          <button type="button" class="glossary-quick-chip glossary-quick-all" id="openGlossaryFromBarBtn">Xem tất cả 75+ thuật ngữ →</button>
+        </div>
       </div>
 
       <!-- ================================================================== -->
@@ -2345,6 +2371,82 @@ class RAGState(TypedDict):
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- INTERACTIVE TECHNICAL TERM POPOVER (CLICK ANY TERM TO VIEW DEFINITION) -->
+  <!-- ====================================================================== -->
+  <div id="glossaryPopover" class="glossary-popover" role="dialog" aria-modal="false" aria-labelledby="glossaryPopoverTitle" hidden>
+    <div class="glossary-popover-header">
+      <div class="glossary-popover-title-wrap">
+        <span class="glossary-stage-badge" id="glossaryPopoverStage">Giai đoạn 1</span>
+        <span class="glossary-category-badge" id="glossaryPopoverCat">Thuật toán Tách từ</span>
+        <h4 class="glossary-popover-title" id="glossaryPopoverTitle">RDRSegmenter</h4>
+      </div>
+      <button type="button" class="glossary-close-btn" id="closeGlossaryPopoverBtn" aria-label="Đóng bảng định nghĩa">✕</button>
+    </div>
+
+    <div class="glossary-popover-body">
+      <div class="glossary-section">
+        <div class="glossary-section-label">ĐỊNH NGHĨA CỐT LÕI</div>
+        <p class="glossary-def-text" id="glossaryPopoverDef"></p>
+      </div>
+
+      <div class="glossary-section" id="glossaryExampleSection">
+        <div class="glossary-section-label">CƠ CHẾ HOẠT ĐỘNG &amp; VÍ DỤ THỰC TẾ</div>
+        <div class="glossary-example-box" id="glossaryPopoverExample"></div>
+      </div>
+
+      <div class="glossary-section" id="glossaryWhySection">
+        <div class="glossary-section-label">ỨNG DỤNG &amp; LƯU Ý KHI CODE (PRODUCTION)</div>
+        <p class="glossary-why-text" id="glossaryPopoverWhy"></p>
+      </div>
+
+      <div class="glossary-section" id="glossaryRelatedSection">
+        <div class="glossary-section-label">THUẬT NGỮ LIÊN QUAN (BẤM ĐỂ XEM)</div>
+        <div class="glossary-related-chips" id="glossaryPopoverRelated"></div>
+      </div>
+    </div>
+
+    <div class="glossary-popover-footer">
+      <span class="glossary-footer-hint">Mẹo: Bấm phím <code>Esc</code> hoặc bấm ra ngoài để đóng</span>
+      <button type="button" class="glossary-open-all-link" id="openDrawerFromPopoverBtn">
+        <svg class="svg-icon" width="14" height="14"><use href="#ic-search"></use></svg>
+        <span>Tra cứu toàn bộ Từ điển</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- FULL SEARCHABLE NLP GLOSSARY DRAWER MODAL                              -->
+  <!-- ====================================================================== -->
+  <div id="glossaryDrawerBackdrop" class="glossary-drawer-backdrop" hidden>
+    <aside class="glossary-drawer" role="dialog" aria-modal="true" aria-labelledby="glossaryDrawerHeading">
+      <div class="glossary-drawer-header">
+        <div>
+          <span class="stage-pill">VIETNAMESE NLP TERMINOLOGY</span>
+          <h3 id="glossaryDrawerHeading">Từ điển Thuật ngữ Chuyên ngành NLP Tiếng Việt</h3>
+          <p class="muted">Tra cứu nhanh định nghĩa, bản chất toán học và ví dụ thực tế của hơn 75 thuật ngữ cốt lõi</p>
+        </div>
+        <button type="button" class="glossary-close-btn" id="closeGlossaryDrawerBtn" aria-label="Đóng từ điển">✕</button>
+      </div>
+
+      <div class="glossary-drawer-controls">
+        <div class="glossary-search-box">
+          <svg class="svg-icon" width="16" height="16"><use href="#ic-search"></use></svg>
+          <input type="search" id="glossarySearchInput" placeholder="Tìm thuật ngữ (VD: RDRSegmenter, SCRDR, NFC, CRF, PhoBERT, NF4, BM25, RRF...)" autocomplete="off" />
+        </div>
+        <div class="glossary-filter-pills" id="glossaryStageFilters">
+          <button type="button" class="glossary-filter-btn active" data-stage-filter="all">Tất cả</button>
+          <button type="button" class="glossary-filter-btn" data-stage-filter="1">Giai đoạn 1: Tiền xử lý</button>
+          <button type="button" class="glossary-filter-btn" data-stage-filter="2">Giai đoạn 2: Embeddings</button>
+          <button type="button" class="glossary-filter-btn" data-stage-filter="3">Giai đoạn 3: Transformers</button>
+          <button type="button" class="glossary-filter-btn" data-stage-filter="4">Giai đoạn 4: LLM &amp; RAG</button>
+        </div>
+      </div>
+
+      <div class="glossary-drawer-list" id="glossaryDrawerList"></div>
+    </aside>
   </div>
 
   <script src="/static/app.js"></script>
