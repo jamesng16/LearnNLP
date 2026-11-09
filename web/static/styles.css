@@ -2347,6 +2347,15 @@ code.glossary-code-term.active-term::after {
 }
 
 /* Floating Definition Popover Card */
+[hidden],
+.hidden,
+.glossary-popover[hidden],
+.glossary-drawer-backdrop[hidden],
+.glossary-popover.hidden,
+.glossary-drawer-backdrop.hidden {
+  display: none !important;
+}
+
 .glossary-popover {
   position: fixed;
   z-index: 9999;

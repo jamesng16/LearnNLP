@@ -6,7 +6,7 @@
   <!-- MANDATORY: Declare support for both light and dark themes to prevent FOUC -->
   <meta name="color-scheme" content="light dark" />
   <title>Vietnamese NLP Mastery — Lộ trình &amp; Phòng Thí Nghiệm NLP Tiếng Việt</title>
-  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/styles.css?v=2.1" />
 </head>
 <body>
   <!-- Reusable SVG Sprite Definitions (Official Lucide Vector Paths) -->
@@ -2376,7 +2376,7 @@ class RAGState(TypedDict):
   <!-- ====================================================================== -->
   <!-- INTERACTIVE TECHNICAL TERM POPOVER (CLICK ANY TERM TO VIEW DEFINITION) -->
   <!-- ====================================================================== -->
-  <div id="glossaryPopover" class="glossary-popover" role="dialog" aria-modal="false" aria-labelledby="glossaryPopoverTitle" hidden>
+  <div id="glossaryPopover" class="glossary-popover hidden" role="dialog" aria-modal="false" aria-labelledby="glossaryPopoverTitle" hidden>
     <div class="glossary-popover-header">
       <div class="glossary-popover-title-wrap">
         <span class="glossary-stage-badge" id="glossaryPopoverStage">Giai đoạn 1</span>
@@ -2420,7 +2420,7 @@ class RAGState(TypedDict):
   <!-- ====================================================================== -->
   <!-- FULL SEARCHABLE NLP GLOSSARY DRAWER MODAL                              -->
   <!-- ====================================================================== -->
-  <div id="glossaryDrawerBackdrop" class="glossary-drawer-backdrop" hidden>
+  <div id="glossaryDrawerBackdrop" class="glossary-drawer-backdrop hidden" hidden>
     <aside class="glossary-drawer" role="dialog" aria-modal="true" aria-labelledby="glossaryDrawerHeading">
       <div class="glossary-drawer-header">
         <div>
@@ -2449,6 +2449,6 @@ class RAGState(TypedDict):
     </aside>
   </div>
 
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=2.1"></script>
 </body>
 </html>

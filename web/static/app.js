@@ -2093,6 +2093,7 @@ function openGlossaryPopover(key, triggerEl) {
   }
 
   popover.hidden = false;
+  popover.classList.remove("hidden");
 
   // Định vị thông minh quanh phần tử vừa bấm (không bao giờ tràn khỏi màn hình)
   if (triggerEl) {
@@ -2120,6 +2121,7 @@ function closeGlossaryPopover() {
   const popover = document.getElementById("glossaryPopover");
   if (popover) {
     popover.hidden = true;
+    popover.classList.add("hidden");
   }
   if (activeGlossaryTriggerEl) {
     activeGlossaryTriggerEl.classList.remove("active-term");
@@ -2132,6 +2134,7 @@ function openGlossaryDrawer(initialQuery = "") {
   const searchInput = document.getElementById("glossarySearchInput");
   if (!backdrop) return;
   backdrop.hidden = false;
+  backdrop.classList.remove("hidden");
   if (searchInput) {
     searchInput.value = initialQuery;
     renderGlossaryDrawerList(initialQuery, currentDrawerStageFilter);
@@ -2143,6 +2146,7 @@ function closeGlossaryDrawer() {
   const backdrop = document.getElementById("glossaryDrawerBackdrop");
   if (backdrop) {
     backdrop.hidden = true;
+    backdrop.classList.add("hidden");
   }
 }
 
