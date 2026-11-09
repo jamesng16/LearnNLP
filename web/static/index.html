@@ -486,113 +486,350 @@
             </div>
           </div>
 
+          <!-- Quick Jump Curriculum TOC for Stage 1 -->
+          <nav class="lesson-toc" aria-label="Mục lục chuyên đề Giai đoạn 1">
+            <span class="toc-label">
+              <svg class="svg-icon" width="15" height="15"><use href="#ic-book-open"></use></svg>
+              <span>5 CHUYÊN ĐỀ CHUYÊN SÂU:</span>
+            </span>
+            <a class="toc-chip" href="#s1-mod-1">1.1 Giải phẫu Unicode Byte-level</a>
+            <a class="toc-chip" href="#s1-mod-2">1.2 Ngữ âm học &amp; Quy tắc Dấu thanh</a>
+            <a class="toc-chip" href="#s1-mod-3">1.3 Khử Nhiễu &amp; Teencode Mạng xã hội</a>
+            <a class="toc-chip" href="#s1-mod-4">1.4 Thuật toán Tách từ (SCRDR vs CRF)</a>
+            <a class="toc-chip" href="#s1-mod-5">1.5 POS Tagging, Dependency &amp; Code Chuẩn</a>
+          </nav>
+
           <!-- Interactive Motion Step Cards -->
           <div class="pipeline-steps-row">
             <div class="step-card" style="--stagger: 1">
-              <div class="step-badge">Bước 1</div>
-              <h4>Chuẩn hóa Unicode <code>NFC</code></h4>
-              <p>Gộp các dấu thanh rời rạc (<code>NFD</code>) về ký tự dựng sẵn duy nhất (<code>NFC</code>) và xóa ký tự ẩn <code>\u200b</code>.</p>
+              <div class="step-badge">Bước 1 • Byte-level</div>
+              <h4>Chuẩn hóa Unicode <code>NFC</code> &amp; Ký tự ẩn</h4>
+              <p>Gộp các dấu thanh tổ hợp rời rạc (<code>NFD</code>) về ký tự dựng sẵn duy nhất (<code>NFC</code>), loại bỏ <code>\u200b</code> (Zero-Width Space) và <code>\ufeff</code> (BOM).</p>
             </div>
             <div class="step-arrow" aria-hidden="true">→</div>
             <div class="step-card" style="--stagger: 2">
-              <div class="step-badge">Bước 2</div>
+              <div class="step-badge">Bước 2 • Syllable-level</div>
               <h4>Chuẩn hóa Dấu thanh &amp; Teencode</h4>
-              <p>Đồng nhất vị trí dấu thanh (<code>hoà → hòa</code>, <code>thuỷ → thủy</code>) khớp với từ điển <code>VnCoreNLP / PhoBERT</code>.</p>
+              <p>Đồng nhất vị trí dấu thanh trên nguyên âm đôi (<code>hoà → hòa</code>, <code>thuỷ → thủy</code>) khớp 100% với từ điển huấn luyện của <code>VnCoreNLP / PhoBERT</code>.</p>
             </div>
             <div class="step-arrow" aria-hidden="true">→</div>
             <div class="step-card" style="--stagger: 3">
-              <div class="step-badge">Bước 3</div>
+              <div class="step-badge">Bước 3 • Word-level</div>
               <h4>Tách từ Ghép (Word Segmentation)</h4>
-              <p>Nối các âm tiết tạo thành từ ghép bằng dấu <code>_</code> (<code>Học_sinh học sinh_học</code>).</p>
+              <p>Sử dụng cây quy tắc <code>RDRSegmenter</code> hoặc <code>CRF</code> để nối các âm tiết của từ ghép bằng dấu <code>_</code> (<code>Học_sinh học sinh_học</code>).</p>
             </div>
           </div>
 
-          <div class="grid-2">
-            <!-- SVG Illustration 1: NFC vs NFD -->
-            <div class="card">
-              <div class="card-title-row">
-                <span class="icon-badge" aria-hidden="true">
-                  <svg class="svg-icon" width="20" height="20"><use href="#ic-code-2"></use></svg>
-                </span>
-                <div>
-                  <h3>Minh họa Động 1: Bẫy Unicode Dựng sẵn (NFC) vs. Tổ hợp (NFD)</h3>
-                  <p class="muted">Cùng hiển thị chữ <strong>"Việt"</strong> trên màn hình nhưng cách lưu trong bộ nhớ hoàn toàn khác nhau:</p>
-                </div>
+          <!-- CHUYÊN ĐỀ 1.1: UNICODE NFC VS NFD -->
+          <article class="card" id="s1-mod-1">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 1.1</span>
+                <span class="read-time-badge">Thời lượng đọc: 8 phút • Nền tảng Bắt buộc</span>
               </div>
-              <div class="svg-diagram-box">
-                <svg viewBox="0 0 540 235" class="edu-svg" role="img" aria-label="So sánh Unicode NFC 4 ký tự và NFD 6 ký tự cho từ Việt">
-                  <!-- NFC Row -->
-                  <rect x="14" y="14" width="512" height="92" rx="12" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                  <text x="28" y="38" fill="#34d399" font-size="13" font-weight="700">✓ NFC (Dựng sẵn - Chuẩn cho mọi mô hình NLP): len = 4 ký tự</text>
-                  <g transform="translate(28, 50)">
-                    <rect x="0" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="38" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">V (0056)</text>
-                    <rect x="86" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="124" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">i (0069)</text>
-                    <rect x="172" y="0" width="120" height="40" rx="8" fill="#065f46" stroke="#10b981" stroke-width="2" class="svg-pulse-node"/>
-                    <text x="232" y="25" fill="#ecfdf5" font-size="14" font-weight="700" text-anchor="middle">ệ (U+1EC7)</text>
-                    <rect x="302" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="340" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">t (0074)</text>
-                    <text x="442" y="25" fill="#34d399" font-size="13" font-weight="700" text-anchor="middle">✓ Khớp Vocab</text>
-                  </g>
+              <span class="tag-emerald">Notebook: 01_unicode_normalization_and_cleaning.ipynb</span>
+            </div>
+            <h3>Giải phẫu Bảng mã Unicode Tiếng Việt: Tại sao <code>NFC</code> và <code>NFD</code> làm sập từ điển của Mô hình?</h3>
+            <p class="prose-text">
+              Trong tiếng Anh (bảng mã ASCII), chữ <code>"a"</code> luôn chỉ có một cách biểu diễn duy nhất là byte <code>0x61</code> (<code>U+0061</code>). Ngược lại, tiếng Việt là ngôn ngữ giàu dấu phụ: <strong>6 thanh điệu</strong> (ngang, huyền, sắc, hỏi, ngã, nặng) kết hợp với các nguyên âm có mũ/râu (<code>ă, â, ê, ô, ơ, ư</code>). Chuẩn Unicode Quốc tế cho phép biểu diễn cùng một chữ cái tiếng Việt theo <strong>2 dạng chuẩn hóa hoàn toàn khác nhau ở mức bộ nhớ</strong>:
+            </p>
 
-                  <!-- NFD Row -->
-                  <rect x="14" y="122" width="512" height="96" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
-                  <text x="28" y="146" fill="#fda4af" font-size="13" font-weight="700">✗ NFD (Tổ hợp - Lỗi khi copy từ PDF/macOS): len = 6 ký tự rời!</text>
-                  <g transform="translate(28, 158)">
-                    <rect x="0" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="26" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">V</text>
-                    <rect x="58" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="84" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">i</text>
-                    <rect x="116" y="0" width="72" height="40" rx="8" fill="#881337" stroke="#f43f5e"/>
-                    <text x="152" y="25" fill="#ffe4e6" font-size="12" font-weight="600" text-anchor="middle">e (0065)</text>
-                    <rect x="194" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
-                    <text x="235" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̣ (U+0323)</text>
-                    <rect x="282" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
-                    <text x="323" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̂ (U+0302)</text>
-                    <rect x="370" y="0" width="46" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
-                    <text x="393" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">t</text>
-                    <text x="456" y="25" fill="#fb7185" font-size="12" font-weight="700" text-anchor="middle">✗ Lỗi [UNK]</text>
-                  </g>
-                </svg>
+            <div class="worked-example-grid">
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>1. Chuẩn Dựng sẵn (NFC)</span>
+                  <span class="tag-emerald">Chuẩn NLP</span>
+                </div>
+                <p>
+                  <strong>Normalization Form Canonical Composition:</strong> Toàn bộ nguyên âm gốc, dấu mũ và dấu thanh được gộp thành <strong>1 codepoint duy nhất</strong> trong khối <em>Latin Extended Additional (U+1EA0 – U+1EF9)</em>. Ví dụ chữ <strong><code>"ệ"</code></strong> là <code>U+1EC7</code> (3 bytes UTF-8: <code>E1 BB 87</code>).
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>2. Chuẩn Tổ hợp (NFD)</span>
+                  <span class="tag-rose">Gây lỗi OOV</span>
+                </div>
+                <p>
+                  <strong>Normalization Form Canonical Decomposition:</strong> Tách rời chữ cái gốc ASCII và các dấu phụ thuộc khối <em>Combining Diacritical Marks (U+0300 – U+0323)</em>. Chữ <strong><code>"ệ"</code></strong> bị tách thành 3 ký tự rời: <code>"e" (U+0065)</code> + <code>dấu nặng (U+0323)</code> + <code>dấu mũ (U+0302)</code>.
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>3. Nguồn gốc phát sinh lỗi</span>
+                  <span class="pos-badge">Thực tế Production</span>
+                </div>
+                <p>
+                  Khi người dùng copy văn bản từ <strong>file PDF xuất từ LaTeX/Corel</strong>, hệ thống file <strong>macOS (HFS+/APFS)</strong>, hoặc một số bộ gõ di động cũ, dữ liệu gửi lên API ở dạng <code>NFD</code> hoặc <strong>Windows-1258</strong> (dựng sẵn chữ cái nhưng rời dấu thanh).
+                </p>
               </div>
             </div>
 
-            <!-- SVG Illustration 2: Word Segmentation Ambiguity -->
-            <div class="card">
-              <div class="card-title-row">
-                <span class="icon-badge" aria-hidden="true">
-                  <svg class="svg-icon" width="20" height="20"><use href="#ic-git-branch"></use></svg>
-                </span>
-                <div>
-                  <h3>Minh họa Động 2: Ranh giới Từ ghép vs. Âm tiết</h3>
-                  <p class="muted">Khoảng trắng trong tiếng Việt phân tách <strong>âm tiết (tiếng)</strong>, không phải <strong>từ (word)</strong>:</p>
-                </div>
+            <div class="svg-diagram-box">
+              <svg viewBox="0 0 540 235" class="edu-svg" role="img" aria-label="So sánh Unicode NFC 4 ký tự và NFD 6 ký tự cho từ Việt">
+                <!-- NFC Row -->
+                <rect x="14" y="14" width="512" height="92" rx="12" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                <text x="28" y="38" fill="#34d399" font-size="13" font-weight="700">✓ NFC (Dựng sẵn - Chuẩn cho mọi mô hình NLP): len("Việt") = 4 ký tự | 6 bytes UTF-8</text>
+                <g transform="translate(28, 50)">
+                  <rect x="0" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="38" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">V (0056)</text>
+                  <rect x="86" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="124" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">i (0069)</text>
+                  <rect x="172" y="0" width="120" height="40" rx="8" fill="#065f46" stroke="#10b981" stroke-width="2" class="svg-pulse-node"/>
+                  <text x="232" y="25" fill="#ecfdf5" font-size="14" font-weight="700" text-anchor="middle">ệ (U+1EC7)</text>
+                  <rect x="302" y="0" width="76" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="340" y="25" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">t (0074)</text>
+                  <text x="442" y="25" fill="#34d399" font-size="13" font-weight="700" text-anchor="middle">✓ Khớp Vocab</text>
+                </g>
+
+                <!-- NFD Row -->
+                <rect x="14" y="122" width="512" height="96" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
+                <text x="28" y="146" fill="#fda4af" font-size="13" font-weight="700">✗ NFD (Tổ hợp - Lỗi khi copy từ PDF/macOS): len("Việt") = 6 ký tự rời | 8 bytes UTF-8</text>
+                <g transform="translate(28, 158)">
+                  <rect x="0" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="26" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">V</text>
+                  <rect x="58" y="0" width="52" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="84" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">i</text>
+                  <rect x="116" y="0" width="72" height="40" rx="8" fill="#881337" stroke="#f43f5e"/>
+                  <text x="152" y="25" fill="#ffe4e6" font-size="12" font-weight="600" text-anchor="middle">e (0065)</text>
+                  <rect x="194" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
+                  <text x="235" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̣ (U+0323)</text>
+                  <rect x="282" y="0" width="82" height="40" rx="8" fill="#881337" stroke="#f43f5e" stroke-dasharray="4,3"/>
+                  <text x="323" y="25" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">◌̂ (U+0302)</text>
+                  <rect x="370" y="0" width="46" height="40" rx="8" fill="#1e293b" stroke="#475569"/>
+                  <text x="393" y="25" fill="#f8fafc" font-size="12" text-anchor="middle">t</text>
+                  <text x="456" y="25" fill="#fb7185" font-size="12" font-weight="700" text-anchor="middle">✗ Lỗi [UNK]</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="callout-box callout-warn">
+              <strong>Hậu quả nghiêm trọng khi đưa văn bản NFD vào PhoBERT / ViT5 / BGE-M3:</strong>
+              Bộ từ điển (Vocabulary) 64,000 từ của <code>PhoBERT</code> lưu từ <code>"Việt_Nam"</code> ở chuẩn <code>NFC</code> (token ID = <code>318</code>). Nếu đầu vào bị dính <code>NFD</code>, BPE Tokenizer không tìm thấy chữ <code>"ệ"</code> dựng sẵn mà cắt vụn thành <code>["Vi", "e@@", "̣@@", "̂@@", "t_Nam"]</code> (hoặc <code>&lt;unk&gt;</code>), làm vector ngữ nghĩa bị phá hủy hoàn toàn dù mắt thường nhìn trên giao diện web thấy câu chữ không hề bị lỗi font!
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bảng mãDấu phụ Combining (NFD)</th>
+                  <th>Mã Unicode Hex</th>
+                  <th>Tên chuẩn Unicode</th>
+                  <th>Ví dụ khi ghép với chữ <code>a</code></th>
+                  <th>Ký tự sau khi gộp về <code>NFC</code></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Dấu huyền</strong> (<code>◌̀</code>)</td>
+                  <td><code>U+0300</code></td>
+                  <td><code>COMBINING GRAVE ACCENT</code></td>
+                  <td><code>a (U+0061) + U+0300</code></td>
+                  <td><strong><code>à (U+00E0)</code></strong> — 1 ký tự duy nhất</td>
+                </tr>
+                <tr>
+                  <td><strong>Dấu sắc</strong> (<code>◌́</code>)</td>
+                  <td><code>U+0301</code></td>
+                  <td><code>COMBINING ACUTE ACCENT</code></td>
+                  <td><code>a (U+0061) + U+0301</code></td>
+                  <td><strong><code>á (U+00E1)</code></strong> — 1 ký tự duy nhất</td>
+                </tr>
+                <tr>
+                  <td><strong>Dấu hỏi</strong> (<code>◌̉</code>)</td>
+                  <td><code>U+0309</code></td>
+                  <td><code>COMBINING HOOK ABOVE</code></td>
+                  <td><code>a (U+0061) + U+0309</code></td>
+                  <td><strong><code>ả (U+1EA3)</code></strong> — 1 ký tự duy nhất</td>
+                </tr>
+                <tr>
+                  <td><strong>Dấu ngã</strong> (<code>◌̃</code>)</td>
+                  <td><code>U+0303</code></td>
+                  <td><code>COMBINING TILDE</code></td>
+                  <td><code>a (U+0061) + U+0303</code></td>
+                  <td><strong><code>ã (U+00E3)</code></strong> — 1 ký tự duy nhất</td>
+                </tr>
+                <tr>
+                  <td><strong>Dấu nặng</strong> (<code>◌̣</code>)</td>
+                  <td><code>U+0323</code></td>
+                  <td><code>COMBINING DOT BELOW</code></td>
+                  <td><code>a (U+0061) + U+0323</code></td>
+                  <td><strong><code>ạ (U+1EA1)</code></strong> — 1 ký tự duy nhất</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 1.2: QUY TẮC DẤU THANH & NGỮ ÂM HỌC -->
+          <article class="card" id="s1-mod-2">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 1.2</span>
+                <span class="read-time-badge">Thời lượng đọc: 7 phút • Ngữ âm học Tiếng Việt</span>
               </div>
-              <div class="svg-diagram-box">
+              <span class="tag-emerald">Hàm: normalize_vietnamese_tone()</span>
+            </div>
+            <h3>Cấu trúc Âm tiết Tiếng Việt &amp; Bài toán Đồng nhất Vị trí Dấu thanh (<code>hòa</code> vs. <code>hoà</code>)</h3>
+            <p class="prose-text">
+              Một âm tiết (tiếng) trong tiếng Việt có cấu trúc tối đa gồm 5 thành phần: <strong>Âm đầu (Onset)</strong> + <strong>Âm đệm (Medial: <code>o, u</code>)</strong> + <strong>Âm chính (Nucleus: nguyên âm)</strong> + <strong>Âm cuối (Coda: <code>p, t, c, ch, m, n, ng, nh, i/y, u/o</code>)</strong> + <strong>Thanh điệu (Tone)</strong>. Sự bất đồng nhất trong dữ liệu văn bản tiếng Việt xảy ra ở các âm tiết có <strong>âm đệm + nguyên âm chính</strong> kết thúc mở (không có phụ âm cuối), cụ thể là 3 vần: <strong><code>oa</code>, <code>oe</code>, <code>uy</code></strong>:
+            </p>
+
+            <div class="comparison-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Tiêu chí phân tích</th>
+                    <th>Quy tắc Kiểu Cũ / Truyền thống (<code>style="old"</code>)</th>
+                    <th>Quy tắc Kiểu Mới / Bộ GD&amp;ĐT (<code>style="new"</code>)</th>
+                    <th>Quy tắc Ngoại lệ Bắt buộc (Cả 2 kiểu)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Nguyên lý đặt dấu</strong></td>
+                    <td>Ưu tiên cân bằng thị giác: đặt dấu trên chữ cái đứng giữa âm tiết (<code>o</code> hoặc <code>u</code>) khi không có âm cuối.</td>
+                    <td>Ưu tiên ngữ âm học: đặt dấu trực tiếp trên <strong>âm chính</strong> (<code>a</code>, <code>e</code>, <code>y</code>) vì âm đệm chỉ làm tròn môi.</td>
+                    <td>Nếu có phụ âm cuối (ví dụ <code>toàn</code>, <code>hoàng</code>, <code>tuyết</code>), cả 2 kiểu đều đặt dấu trên nguyên âm chính!</td>
+                  </tr>
+                  <tr>
+                    <td><strong>15 tổ hợp chuyển đổi</strong></td>
+                    <td>
+                      <code>òa, óa, ỏa, õa, ọa</code><br/>
+                      <code>òe, óe, ỏe, õe, ọe</code><br/>
+                      <code>ùy, úy, ủy, ũy, ụy</code>
+                    </td>
+                    <td>
+                      <code>oà, oá, oả, oã, oạ</code><br/>
+                      <code>oè, oé, oẻ, oẽ, oẹ</code><br/>
+                      <code>uỳ, uý, uỷ, uỹ, uỵ</code>
+                    </td>
+                    <td>
+                      Sau âm đầu <strong><code>qu</code></strong> (<code>quý giá</code>, <code>ma quỷ</code>, <code>quỳ lạy</code>): chữ <code>u</code> thuộc âm đầu <code>qu</code> nên <strong><code>y</code> là nguyên âm duy nhất</strong> → luôn viết <code>quý, quỷ</code>!
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ví dụ thực tế</strong></td>
+                    <td><code>hòa bình</code>, <code>sức khỏe</code>, <code>thủy lợi</code>, <code>túy lúy</code></td>
+                    <td><code>hoà bình</code>, <code>sức khoẻ</code>, <code>thuỷ lợi</code>, <code>tuý luý</code></td>
+                    <td><code>quý khách</code> (Đúng) vs. <code>qúy khách</code> (Sai chính tả)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tương thích Pretrained Models</strong></td>
+                    <td><span class="tag-emerald">✓ Chuẩn của VnCoreNLP, PhoW2V, PhoBERT</span> (20GB Wikipedia + News được chuẩn hóa theo kiểu cũ)</td>
+                    <td>Thường gặp trên bộ gõ macOS/iOS mặc định và một số trang báo điện tử</td>
+                    <td>Nếu truyền <code>"thuỷ_lợi"</code> (kiểu mới) vào <code>PhoBERT</code>, từ này bị coi là từ lạ và bị tách subword!</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 1.3: LÀM SẠCH NHIỄU & TEENCODE MẠNG XÃ HỘI -->
+          <article class="card" id="s1-mod-3">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 1.3</span>
+                <span class="read-time-badge">Thời lượng đọc: 6 phút • Làm sạch Dữ liệu Thực chiến</span>
+              </div>
+              <span class="tag-emerald">Dataset: UIT-VSFC (16,175 câu)</span>
+            </div>
+            <h3>Xử lý Nhiễu Ký tự Ẩn, Lặp Ký tự Cảm xúc &amp; Chuẩn hóa Teencode Tiếng Việt</h3>
+            <p class="prose-text">
+              Trên các tập dữ liệu đánh giá thực tế như <strong><code>UIT-VSFC</code></strong> (phản hồi sinh viên), <strong><code>VLSP Sentiment</code></strong> hay bình luận thương mại điện tử (Shopee, Tiki, Facebook), văn bản chứa rất nhiều nhiễu đặc thù cần xử lý theo thứ tự nghiêm ngặt trước khi đưa vào bộ tách từ:
+            </p>
+            <div class="worked-example-grid">
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>1. Ký tự Ẩn Không Độ Rộng</span>
+                  <code>\u200b • \ufeff</code>
+                </div>
+                <p>
+                  Ký tự <code>Zero-Width Space (\u200b)</code>, <code>Zero-Width Non-Joiner (\u200c)</code> và <code>Byte Order Mark (\ufeff)</code> dính bên trong từ (ví dụ <code>"giảng\u200bviên"</code>) khiến mắt thường không thấy nhưng làm hỏng hoàn toàn Regex và Tokenizer.
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>2. Kéo dài Âm tiết Cảm xúc</span>
+                  <code>đẹpppp → đẹp</code>
+                </div>
+                <p>
+                  Bình luận mạng xã hội thường lặp chữ cái cuối để nhấn mạnh: <code>"dạy hayyyyy quáaaaa"</code> hoặc <code>"buồnnnnn"</code>. Trong tiếng Việt không có từ hợp lệ nào có 3 chữ cái giống hệt nhau liên tiếp, nên ta dùng Regex <code>r"(\w)\1{2,}" → r"\1"</code> để thu gọn.
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>3. Giải mã Teencode theo Ngữ cảnh</span>
+                  <code>gv, sv, ko, đc</code>
+                </div>
+                <p>
+                  Ánh xạ từ viết tắt chỉ trên <strong>ranh giới từ nguyên vẹn (Word Boundary <code>\b</code>)</strong>: <code>gv → giảng viên</code>, <code>sv → sinh viên</code>, <code>cntt → công nghệ thông tin</code>, <code>ko/k/kh → không</code>, <code>đc/dc → được</code>, <code>ntn → như thế nào</code>.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 1.4: THUẬT TOÁN TÁCH TỪ TIẾNG VIỆT -->
+          <article class="card" id="s1-mod-4">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 1.4</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Thuật toán Cốt lõi</span>
+              </div>
+              <span class="tag-emerald">Notebook: 02_word_segmentation_underthesea_vncorenlp.ipynb</span>
+            </div>
+            <h3>Giải phẫu Thuật toán Tách từ Tiếng Việt: <code>RDRSegmenter (VnCoreNLP)</code> vs. <code>Linear-chain CRF (pyvi / underthesea)</code></h3>
+            <p class="prose-text">
+              Trong tiếng Việt, <strong>khoảng trắng dùng để phân tách các âm tiết (syllables/tiếng) chứ không phân tách từ (words)</strong>. Khoảng 70% từ vựng tiếng Việt là từ ghép 2 âm tiết trở lên. Bài toán tách từ tiếng Việt (Vietnamese Word Segmentation) được phát biểu thành bài toán <strong>Gán nhãn Chuỗi Nhị phân (Sequence Labeling)</strong> trên từng âm tiết với 2 nhãn:
+              <strong><code>B_W</code> (Begin of Word — Bắt đầu từ mới, ngăn cách bằng khoảng trắng)</strong> và <strong><code>I_W</code> (Inside of Word — Nối với âm tiết liền trước bằng dấu gạch dưới <code>_</code>)</strong>.
+            </p>
+
+            <div class="grid-2">
+              <div class="sub-panel">
+                <h4>Hai dạng Nhập nhằng Kinh điển trong Tách từ Tiếng Việt</h4>
+                <ul class="bullet-list">
+                  <li>
+                    <strong>1. Nhập nhằng Giao thoa (Overlapping Ambiguity):</strong> Chuỗi 3 âm tiết <span class="math-var">A B C</span> mà cả <span class="math-var">A_B</span> lẫn <span class="math-var">B_C</span> đều là từ ghép có nghĩa trong từ điển.<br/>
+                    <em>Ví dụ:</em> <code>"tốc độ truyền thông tin"</code>:<br/>
+                    • Phân tích đúng theo ngữ cảnh kỹ thuật: <code>tốc_độ truyền thông_tin</code> (truyền + thông_tin).<br/>
+                    • Phân tích sai nếu khớp tham lam từ trái sang phải (Longest Matching): <code>tốc_độ truyền_thông tin</code>!
+                  </li>
+                  <li>
+                    <strong>2. Nhập nhằng Kết hợp (Combinatorial Ambiguity):</strong> Chuỗi <span class="math-var">A B</span> vừa có thể là 1 từ ghép <span class="math-var">A_B</span>, vừa có thể là 2 từ đơn <span class="math-var">A</span> + <span class="math-var">B</span> tùy cấu trúc ngữ pháp của câu.<br/>
+                    <em>Ví dụ:</em> <code>"Ông già đi nhanh quá"</code> (<code>Ông_già</code> = danh từ chủ ngữ) vs. <code>"Ông đã già đi nhiều"</code> (<code>Ông</code> = đại từ, <code>già</code> = tính từ vị ngữ).
+                  </li>
+                </ul>
+              </div>
+
+              <div class="svg-diagram-box" style="margin-top: 0;">
                 <svg viewBox="0 0 540 235" class="edu-svg" role="img" aria-label="Minh họa tách câu Học sinh học sinh học thành 3 từ Học_sinh, học, sinh_học">
-                  <text x="270" y="28" fill="#cbd5e1" font-size="13" font-weight="600" text-anchor="middle">Câu đầu vào: "Học sinh học sinh học" (5 âm tiết)</text>
-                  <!-- 5 Syllables -->
-                  <g transform="translate(45, 44)">
-                    <rect x="0" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
-                    <text x="40" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">Học</text>
-                    <rect x="92" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
-                    <text x="132" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">sinh</text>
-                    <rect x="184" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
-                    <text x="224" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">học</text>
-                    <rect x="276" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
-                    <text x="316" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">sinh</text>
-                    <rect x="368" y="0" width="80" height="36" rx="8" fill="#1e293b" stroke="#64748b"/>
-                    <text x="408" y="23" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">học</text>
+                  <text x="270" y="26" fill="#cbd5e1" font-size="12.5" font-weight="600" text-anchor="middle">Gán nhãn B_W / I_W cho câu: "Học sinh học sinh học" (5 âm tiết)</text>
+                  <!-- 5 Syllables with B_W / I_W tags -->
+                  <g transform="translate(45, 40)">
+                    <rect x="0" y="0" width="80" height="40" rx="8" fill="#1e293b" stroke="#38bdf8"/>
+                    <text x="40" y="18" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">Học</text>
+                    <text x="40" y="34" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">[B_W]</text>
+
+                    <rect x="92" y="0" width="80" height="40" rx="8" fill="#1e293b" stroke="#38bdf8"/>
+                    <text x="132" y="18" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">sinh</text>
+                    <text x="132" y="34" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[I_W → _]</text>
+
+                    <rect x="184" y="0" width="80" height="40" rx="8" fill="#1e293b" stroke="#f59e0b"/>
+                    <text x="224" y="18" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">học</text>
+                    <text x="224" y="34" fill="#fcd34d" font-size="11" font-weight="700" text-anchor="middle">[B_W]</text>
+
+                    <rect x="276" y="0" width="80" height="40" rx="8" fill="#1e293b" stroke="#10b981"/>
+                    <text x="316" y="18" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">sinh</text>
+                    <text x="316" y="34" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">[B_W]</text>
+
+                    <rect x="368" y="0" width="80" height="40" rx="8" fill="#1e293b" stroke="#10b981"/>
+                    <text x="408" y="18" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">học</text>
+                    <text x="408" y="34" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[I_W → _]</text>
                   </g>
 
                   <!-- Animated Connecting Flow Lines -->
-                  <path d="M 85 86 L 85 114 L 177 114 L 177 86" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                  <path d="M 85 84 L 85 114 L 177 114 L 177 84" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
                   <line x1="131" y1="114" x2="131" y2="140" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
 
-                  <line x1="269" y1="86" x2="269" y2="140" stroke="#f59e0b" stroke-width="2.5" class="svg-flow-line"/>
+                  <line x1="269" y1="84" x2="269" y2="140" stroke="#f59e0b" stroke-width="2.5" class="svg-flow-line"/>
 
-                  <path d="M 361 86 L 361 114 L 453 114 L 453 86" fill="none" stroke="#10b981" stroke-width="2.5"/>
+                  <path d="M 361 84 L 361 114 L 453 114 L 453 84" fill="none" stroke="#10b981" stroke-width="2.5"/>
                   <line x1="407" y1="114" x2="407" y2="140" stroke="#10b981" stroke-width="2.5" class="svg-flow-line"/>
 
                   <!-- 3 Segmented Compound Words -->
@@ -612,37 +849,155 @@
                 </svg>
               </div>
             </div>
-          </div>
 
-          <div class="card">
-            <h3>Bảng Đối Chiếu Quy Tắc Đặt Dấu Thanh: Kiểu Cũ (<code>hòa, khỏe, thủy</code>) vs. Kiểu Mới (<code>hoà, khoẻ, thuỷ</code>)</h3>
-            <div class="comparison-table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Đặc điểm</th>
-                    <th>Quy tắc Kiểu Cũ (<code>style="old"</code>)</th>
-                    <th>Quy tắc Kiểu Mới (<code>style="new"</code>)</th>
-                    <th>Ngoại lệ bắt buộc</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Vị trí đặt dấu (oa, oe, uy cuối âm tiết)</strong></td>
-                    <td>Đặt trên nguyên âm đầu: <code>hòa bình</code>, <code>sức khỏe</code>, <code>thủy lợi</code></td>
-                    <td>Đặt trên nguyên âm chính: <code>hoà bình</code>, <code>sức khoẻ</code>, <code>thuỷ lợi</code></td>
-                    <td>Sau phụ âm <strong><code>qu</code></strong> luôn đặt dấu trên <strong><code>y</code></strong>: <code>quý giá</code>, <code>ma quỷ</code></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Tương thích mô hình NLP</strong></td>
-                    <td><span class="tag-emerald">✓ Chuẩn của VnCoreNLP, PhoW2V, PhoBERT</span></td>
-                    <td>Thường gặp trên văn bản người dùng gõ trên macOS/iOS</td>
-                    <td>Nếu truyền <code>hoà_bình</code> vào PhoBERT dễ bị tách vụn subword!</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="callout-box callout-info">
+              <strong>Cơ chế Cây Quy tắc Ngoại lệ SCRDR của <code>RDRSegmenter (VnCoreNLP)</code>:</strong>
+              Bước 1: Khởi tạo gán nhãn <code>B_W / I_W</code> ban đầu bằng thuật toán <strong>Longest Matching</strong> dựa trên từ điển tiếng Việt.<br/>
+              Bước 2: Duyệt qua cây nhị phân <strong>Single Classification Ripple-Down Rules (SCRDR)</strong> nhìn ngữ cảnh cửa sổ 5 âm tiết xung quanh (<span class="math-var">s<sub>i−2</sub>, s<sub>i−1</sub>, s<sub>i</sub>, s<sub>i+1</sub>, s<sub>i+2</sub></span>). Nếu thỏa mãn điều kiện ngoại lệ (ví dụ âm tiết thứ 3 <code>"học"</code> đứng giữa 2 danh từ <code>"Học_sinh"</code> và <code>"sinh_học"</code>), cây SCRDR tự động sửa nhãn từ <code>I_W</code> sang <code>B_W</code> để tách <code>"học"</code> thành động từ độc lập!
             </div>
-          </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bộ công cụ (Toolkit)</th>
+                  <th>Thuật toán cốt lõi</th>
+                  <th>F1-Score (VLSP 2013)</th>
+                  <th>Tốc độ xử lý (CPU)</th>
+                  <th>Khi nào nên chọn trong thực tế?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong><code>VnCoreNLP</code> / <code>py_vncorenlp</code></strong></td>
+                  <td>Longest-Match + Cây quy tắc ngoại lệ <strong>SCRDR</strong></td>
+                  <td><span class="tag-emerald">~97.90% (Cao nhất)</span></td>
+                  <td>~14,000 câu/giây (Java JVM)</td>
+                  <td><strong>Bắt buộc dùng khi tiền xử lý cho <code>PhoBERT</code>, <code>PhoW2V</code>, <code>PhoNLP</code></strong> để khớp 100% phân phối dữ liệu pre-training của VinAI.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>underthesea</code></strong></td>
+                  <td><strong>Linear-chain CRF</strong> + Trích xuất đặc trưng từ điển</td>
+                  <td>~97.20%</td>
+                  <td>~4,500 câu/giây (Pure Python/Cython)</td>
+                  <td>Khi cần bộ pipeline thuần Python đầy đủ (Word Seg, POS, NER, Dependency, Sentiment) dễ cài đặt qua <code>pip</code> không cần Java.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>pyvi</code> (<code>ViTokenizer</code>)</strong></td>
+                  <td><strong>Linear-chain CRF</strong> tối ưu hóa tốc độ</td>
+                  <td>~96.80%</td>
+                  <td><span class="tag-emerald">~18,000 câu/giây (Rất nhẹ)</span></td>
+                  <td>Khi lập chỉ mục tìm kiếm toàn văn <strong>BM25 / Elasticsearch</strong> hoặc xây dựng baseline <strong>TF-IDF</strong> tốc độ cao trên hàng triệu văn bản.</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 1.5: POS TAGGING, DEPENDENCY PARSING & PRODUCTION CODE -->
+          <article class="card" id="s1-mod-5">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 1.5</span>
+                <span class="read-time-badge">Thời lượng đọc: 8 phút • Cú pháp &amp; Code Production</span>
+              </div>
+              <span class="tag-emerald">Module: 01_Foundations_Preprocessing/vn_preprocessing.py</span>
+            </div>
+            <h3>Hệ thống Nhãn Từ loại (VLSP POS Tagset), Cú pháp Phụ thuộc &amp; Mã nguồn Chuẩn</h3>
+            <p class="prose-text">
+              Sau khi tách từ, hai bước tiếp theo trong pipeline xử lý ngôn ngữ tự nhiên truyền thống là <strong>Gán nhãn Từ loại (Part-of-Speech Tagging)</strong> và <strong>Phân tích Cú pháp Phụ thuộc (Dependency Parsing)</strong> nhằm xác định cấu trúc <em>Chủ ngữ (<code>nsub</code>) — Động từ chính (<code>root</code>) — Tân ngữ (<code>dob</code>) — Bổ ngữ (<code>nmod</code>)</em> trong câu tiếng Việt:
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nhãn POS (VLSP)</th>
+                  <th>Ý nghĩa Ngôn ngữ học</th>
+                  <th>Ví dụ trong Tiếng Việt</th>
+                  <th>Nhãn Dependency thường đi kèm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="pos-badge pos-N">N</span> / <span class="pos-badge pos-Np">Np</span> / <span class="pos-badge">Nc</span></td>
+                  <td>Danh từ chung (<code>N</code>), Danh từ riêng (<code>Np</code>), Danh từ chỉ loại (<code>Nc</code>)</td>
+                  <td><code>sinh_viên (N)</code>, <code>Hà_Nội (Np)</code>, <code>cuốn (Nc)</code></td>
+                  <td><code>nsub</code> (Chủ ngữ), <code>dob</code> (Tân ngữ trực tiếp), <code>nmod</code> (Bổ ngữ danh từ)</td>
+                </tr>
+                <tr>
+                  <td><span class="pos-badge pos-V">V</span></td>
+                  <td>Động từ hành động, trạng thái</td>
+                  <td><code>nghiên_cứu</code>, <code>công_bố</code>, <code>giảng_dạy</code></td>
+                  <td><code>root</code> (Đỉnh gốc của câu), <code>vmod</code> (Bổ ngữ động từ)</td>
+                </tr>
+                <tr>
+                  <td><span class="pos-badge pos-A">A</span></td>
+                  <td>Tính từ chỉ tính chất, mức độ</td>
+                  <td><code>nhiệt_tình</code>, <code>dễ_hiểu</code>, <code>xuất_sắc</code></td>
+                  <td><code>amod</code> (Bổ ngữ tính từ cho danh từ), <code>prd</code> (Vị ngữ)</td>
+                </tr>
+                <tr>
+                  <td><span class="pos-badge">R</span> / <span class="pos-badge">E</span> / <span class="pos-badge">C</span></td>
+                  <td>Phó từ (<code>R</code>), Giới từ (<code>E</code>), Liên từ (<code>C</code>)</td>
+                  <td><code>đã, đang, rất (R)</code>, <code>tại, ở, bằng (E)</code>, <code>và, nhưng (C)</code></td>
+                  <td><code>adv</code> (Phó từ bổ nghĩa), <code>loc</code> (Trạng ngữ chỉ nơi chốn), <code>coord</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-window">
+              <div class="code-window-header">
+                <span class="code-window-title">
+                  <svg class="svg-icon" width="15" height="15"><use href="#ic-terminal"></use></svg>
+                  <span>01_Foundations_Preprocessing/vn_preprocessing.py — Pipeline Tiền xử lý Tiếng Việt Chuẩn Production</span>
+                </span>
+                <button class="btn-copy-code" type="button" data-copy-target="code-stage-1">
+                  <svg class="svg-icon" width="14" height="14"><use href="#ic-code-2"></use></svg>
+                  <span>Copy Code</span>
+                </button>
+              </div>
+              <pre class="code-block" id="code-stage-1"><code>import re
+import unicodedata
+from pyvi import ViTokenizer
+
+# 1. Bảng ánh xạ chuẩn hóa dấu thanh Kiểu Mới -> Kiểu Cũ (Chuẩn VnCoreNLP / PhoBERT)
+NEW_TO_OLD_TONE = {
+    "oà": "òa", "oá": "óa", "oả": "ỏa", "oã": "õa", "oạ": "ọa",
+    "oè": "òe", "oé": "óe", "oẻ": "ỏe", "oẽ": "õe", "oẹ": "ọe",
+    "uỳ": "ùy", "uý": "úy", "uỷ": "ủy", "uỹ": "ũy", "uỵ": "ụy",
+}
+
+def clean_and_segment_for_phobert(raw_text: str) -> str:
+    # Bước 1: Xóa ký tự ẩn Zero-Width Space (\u200b) &amp; BOM (\ufeff)
+    text = re.sub(r"[\u200b\u200c\u200d\ufeff]", "", raw_text)
+    # Bước 2: Ép toàn bộ chuỗi về chuẩn Unicode Dựng sẵn (NFC)
+    text = unicodedata.normalize("NFC", text)
+    # Bước 3: Chuẩn hóa dấu thanh về Kiểu Cũ (trừ âm đầu 'qu' như 'quý giá')
+    words = []
+    for token in text.split():
+        if not token.lower().startswith("qu"):
+            for new_v, old_v in NEW_TO_OLD_TONE.items():
+                token = token.replace(new_v, old_v)
+        words.append(token)
+    normalized_text = " ".join(words)
+    # Bước 4: Tách từ ghép tiếng Việt (nối âm tiết bằng dấu '_')
+    return ViTokenizer.tokenize(normalized_text)
+
+# Thử nghiệm thực tế:
+sample = "Học sinh học sinh học và nghiên cứu thuỷ lợi cùng những điều quý giá."
+print(clean_and_segment_for_phobert(sample))
+# Output: "Học_sinh học sinh_học và nghiên_cứu thủy_lợi cùng những điều quý_giá ."</code></pre>
+            </div>
+
+            <div class="stage-footer-cta mt-16">
+              <div>
+                <h4>Đã nắm vững 5 Chuyên đề Lý thuyết Giai đoạn 1?</h4>
+                <p class="muted">Hãy chuyển sang <strong>Phòng Thí Nghiệm Tương Tác (Live Sandbox)</strong> để mổ xẻ trực tiếp từng byte Unicode của bạn hoặc làm <strong>Bài Tập Thực Chiến (+XP)</strong>!</p>
+              </div>
+              <button class="btn-primary" type="button" data-Jump-Tab="sandbox">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-terminal"></use></svg>
+                <span>Mở Phòng Thí Nghiệm Giai đoạn 1</span>
+              </button>
+            </div>
+          </article>
         </div>
 
         <!-- Tab 2: Live Sandbox Stage 1 -->
@@ -787,83 +1142,288 @@
             </div>
           </div>
 
+          <!-- Quick Jump Curriculum TOC for Stage 2 -->
+          <nav class="lesson-toc" aria-label="Mục lục chuyên đề Giai đoạn 2">
+            <span class="toc-label">
+              <svg class="svg-icon" width="15" height="15"><use href="#ic-book-open"></use></svg>
+              <span>5 CHUYÊN ĐỀ CHUYÊN SÂU:</span>
+            </span>
+            <a class="toc-chip" href="#s2-mod-1">2.1 Toán học TF-IDF &amp; Ví dụ Tính tay</a>
+            <a class="toc-chip" href="#s2-mod-2">2.2 Word2Vec Skip-gram &amp; Negative Sampling</a>
+            <a class="toc-chip" href="#s2-mod-3">2.3 Giải phẫu PhoW2V &amp; Giới hạn Đa nghĩa</a>
+            <a class="toc-chip" href="#s2-mod-4">2.4 Pipeline LinearSVC trên UIT-VSFC</a>
+            <a class="toc-chip" href="#s2-mod-5">2.5 Code Chuẩn Scikit-learn &amp; Gensim</a>
+          </nav>
+
           <div class="pipeline-steps-row">
             <div class="step-card" style="--stagger: 1">
-              <div class="step-badge">Bước 1</div>
+              <div class="step-badge">Bước 1 • Từ vựng</div>
               <h4>Tách từ Ghép Chuẩn</h4>
-              <p>Chuyển câu thành chuỗi từ vựng có nghĩa (<code>giảng_viên</code>, <code>nhiệt_tình</code>, <code>dễ_hiểu</code>).</p>
+              <p>Chuyển câu thành chuỗi đơn vị từ vựng có nghĩa (<code>giảng_viên</code>, <code>nhiệt_tình</code>, <code>sinh_học</code>) để bảo toàn ngữ nghĩa.</p>
             </div>
             <div class="step-arrow" aria-hidden="true">→</div>
             <div class="step-card" style="--stagger: 2">
-              <div class="step-badge">Bước 2</div>
-              <h4>Ánh xạ Vector Nhúng (<span class="math-var">v<sub>w</sub> ∈ ℝ<sup>d</sup></span>)</h4>
-              <p>Mỗi từ trở thành một điểm tọa độ trong không gian nhiều chiều (Word2Vec Skip-gram / PhoW2V).</p>
+              <div class="step-badge">Bước 2 • Vector hóa</div>
+              <h4>TF-IDF Sparse vs. Dense (<span class="math-var">v<sub>w</sub> ∈ ℝ<sup>300</sup></span>)</h4>
+              <p>Biểu diễn văn bản bằng trọng số thống kê N-gram hoặc ánh xạ vào không gian liên tục 300 chiều của <code>PhoW2V</code>.</p>
             </div>
             <div class="step-arrow" aria-hidden="true">→</div>
             <div class="step-card" style="--stagger: 3">
-              <div class="step-badge">Bước 3</div>
-              <h4>Đo Góc Cosine <span class="math-var">cos(θ)</span></h4>
-              <p>Hai từ cùng ngữ cảnh có góc <span class="math-var">θ → 0°</span> dẫn tới <span class="math-var">cos(θ) → 1.0</span>.</p>
+              <div class="step-badge">Bước 3 • Hình học Vector</div>
+              <h4>Đo Góc Cosine <span class="math-var">cos(θ)</span> &amp; Siêu phẳng SVM</h4>
+              <p>Hai từ cùng trường ngữ nghĩa có góc <span class="math-var">θ → 0°</span> (<span class="math-var">cos(θ) → 1.0</span>), giúp phân lớp tuyến tính chính xác.</p>
             </div>
           </div>
 
-          <div class="grid-2">
-            <div class="card">
-              <h3>1. TF-IDF Kết hợp Tách từ Tiếng Việt</h3>
-              <p class="muted">Công thức tính trọng số TF-IDF của từ ghép <span class="math-var">t</span> trong văn bản <span class="math-var">d</span> thuộc tập <span class="math-var">D</span>:</p>
-              <div class="formula-box">
-                <div class="math-eq" role="math" aria-label="Công thức TF-IDF">
-                  <span class="math-func">TF-IDF</span><span>(<i>t</i>, <i>d</i>, <i>D</i>)</span>
-                  <span class="math-op">=</span>
-                  <span class="math-func">TF</span><span>(<i>t</i>, <i>d</i>)</span>
-                  <span class="math-op">×</span>
-                  <span>&#91;</span>
-                  <span class="math-func">ln</span>
-                  <span class="math-frac">
-                    <span class="math-frac-num">1 + |<i>D</i>|</span>
-                    <span class="math-frac-den">1 + <span class="math-func">DF</span>(<i>t</i>)</span>
-                  </span>
-                  <span class="math-op">+</span>
-                  <span>1 &#93;</span>
-                </div>
-                <div class="formula-legend">
-                  <span class="legend-pill"><strong>TF(<i>t</i>, <i>d</i>):</strong> Tần suất từ <i>t</i> trong câu <i>d</i></span>
-                  <span class="legend-pill"><strong>|<i>D</i>|:</strong> Tổng số câu</span>
-                  <span class="legend-pill"><strong>DF(<i>t</i>):</strong> Số câu chứa từ <i>t</i></span>
-                </div>
+          <!-- CHUYÊN ĐỀ 2.1: TOÁN HỌC TF-IDF & VÍ DỤ TÍNH TAY -->
+          <article class="card" id="s2-mod-1">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 2.1</span>
+                <span class="read-time-badge">Thời lượng đọc: 9 phút • Biểu diễn Thống kê</span>
               </div>
-              <ul class="bullet-list">
-                <li><strong>Tại sao phải tách từ trước khi tính TF-IDF?</strong> Nếu không tách từ, câu <em>"Học sinh học sinh học"</em> chỉ sinh ra 2 unigram là <code>học</code> và <code>sinh</code>. Khi tách từ thành <code>Học_sinh học sinh_học</code>, ma trận TF-IDF giữ trọn vẹn khái niệm <code>học_sinh</code> và <code>sinh_học</code>.</li>
-                <li>Kết hợp <code>ngram_range=(1, 2)</code> + <code>LinearSVC</code> / <code>LogisticRegression</code> đạt tới <strong>~89.4% Macro-F1</strong> trên tập <code>UIT-VSFC</code> với tốc độ huấn luyện chỉ 3 giây trên CPU!</li>
-              </ul>
+              <span class="tag-emerald">Notebook: 01_tfidf_word2vec_phow2v.ipynb</span>
+            </div>
+            <h3>Từ Bag-of-Words đến Toán học <code>TF-IDF</code> Sublinear Scaling kết hợp Tách từ Tiếng Việt</h3>
+            <p class="prose-text">
+              Phương pháp <strong>Bag-of-Words (Túi từ)</strong> đếm số lần xuất hiện của từng từ nhưng có nhược điểm lớn: các hư từ tiếng Việt xuất hiện ở mọi câu (như <code>"là", "của", "những", "rất", "và"</code>) có tần suất rất cao nhưng mang ít thông tin phân loại. <strong>TF-IDF (Term Frequency – Inverse Document Frequency)</strong> khắc phục triệt để bằng cách nhân tần suất nội tại <strong>TF</strong> với độ hiếm toàn cục <strong>IDF</strong> (công thức chuẩn của <code>scikit-learn TfidfVectorizer(sublinear_tf=True)</code>):
+            </p>
+
+            <div class="formula-box">
+              <div class="math-eq" role="math" aria-label="Công thức TF-IDF Sublinear">
+                <span class="math-func">TF-IDF</span><span>(<i>t</i>, <i>d</i>, <i>D</i>)</span>
+                <span class="math-op">=</span>
+                <span class="math-term-group frozen">
+                  <span>1 + <span class="math-func">ln</span>(<span class="math-func">count</span>(<i>t</i>, <i>d</i>))</span>
+                  <span class="math-term-caption">Sublinear TF (khi count &gt; 0)</span>
+                </span>
+                <span class="math-op">×</span>
+                <span class="math-term-group trainable">
+                  <span>
+                    <span class="math-func">ln</span>
+                    <span class="math-frac">
+                      <span class="math-frac-num">1 + |<i>D</i>|</span>
+                      <span class="math-frac-den">1 + <span class="math-func">DF</span>(<i>t</i>)</span>
+                    </span>
+                    + 1
+                  </span>
+                  <span class="math-term-caption">Smoothed IDF (Chống chia cho 0)</span>
+                </span>
+              </div>
+              <div class="formula-legend">
+                <span class="legend-pill"><strong>count(<i>t</i>, <i>d</i>):</strong> Số lần từ ghép <i>t</i> xuất hiện trong văn bản <i>d</i></span>
+                <span class="legend-pill"><strong>|<i>D</i>|:</strong> Tổng số văn bản trong tập huấn luyện</span>
+                <span class="legend-pill"><strong>DF(<i>t</i>):</strong> Số văn bản có chứa từ <i>t</i></span>
+                <span class="legend-pill"><strong>Chuẩn hóa cuối:</strong> Chia cho chuẩn Euclid ‖<b>v</b>‖<sub>2</sub> để độ dài câu không làm lệch trọng số</span>
+              </div>
             </div>
 
-            <div class="card">
-              <h3>2. Độ tương đồng Cosine trong Không gian <code>PhoW2V</code></h3>
-              <p class="muted">Mỗi từ tiếng Việt được ánh xạ thành một vector đặc <span class="math-var"><b>u</b>, <b>v</b> ∈ ℝ<sup>100 hoặc 300</sup></span>:</p>
-              <div class="formula-box">
-                <div class="math-eq" role="math" aria-label="Công thức Cosine Similarity">
-                  <span class="math-func">CosineSim</span><span>(<b>u</b>, <b>v</b>)</span>
-                  <span class="math-op">=</span>
-                  <span class="math-frac">
-                    <span class="math-frac-num"><b>u</b> · <b>v</b></span>
-                    <span class="math-frac-den">‖<b>u</b>‖<sub>2</sub> × ‖<b>v</b>‖<sub>2</sub></span>
-                  </span>
-                  <span class="math-op">=</span>
-                  <span>cos(<i>θ</i>) ∈ [−1, 1]</span>
+            <div class="worked-example-grid">
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>Khi CHƯA Tách từ (Sai lầm phổ biến)</span>
+                  <span class="tag-rose">Mất nghĩa từ ghép</span>
                 </div>
-                <div class="formula-legend">
-                  <span class="legend-pill"><strong><b>u</b> · <b>v</b>:</strong> Tích vô hướng 2 vector</span>
-                  <span class="legend-pill"><strong>cos(<i>θ</i>) ≈ 1:</strong> Đồng nghĩa</span>
-                  <span class="legend-pill"><strong>cos(<i>θ</i>) ≈ 0:</strong> Khác chủ đề</span>
+                <p>
+                  Xét câu: <code>"Học sinh học sinh học"</code>.<br/>
+                  Nếu cắt theo khoảng trắng: từ điển chỉ có 2 âm tiết rời <code>"học": 2 lần</code> và <code>"sinh": 3 lần</code>. Câu này bị đồng nhất hoàn toàn với câu vô nghĩa <code>"Sinh học sinh học sinh"</code>!
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>Khi ĐÃ Tách từ (Đúng chuẩn)</span>
+                  <span class="tag-emerald">Bảo toàn ngữ nghĩa</span>
+                </div>
+                <p>
+                  Qua <code>RDRSegmenter / pyvi</code>: câu trở thành <code>"Học_sinh học sinh_học"</code>.<br/>
+                  Ma trận TF-IDF trích xuất đúng 3 đặc trưng độc lập: <code>"học_sinh" (count=1)</code>, <code>"học" (count=1)</code>, <code>"sinh_học" (count=1)</code>.
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>Kết hợp Bigram <code>(1, 2)</code></span>
+                  <span class="pos-badge">Bắt cụm phủ định</span>
+                </div>
+                <p>
+                  Khi bật <code>ngram_range=(1, 2)</code> trên văn bản đã tách từ, TF-IDF bắt được các cặp từ đảo chiều cảm xúc cực kỳ quan trọng như: <code>"không dễ_hiểu"</code> vs. <code>"rất dễ_hiểu"</code>, <code>"chưa nhiệt_tình"</code>.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 2.2: WORD2VEC SKIP-GRAM & NEGATIVE SAMPLING -->
+          <article class="card" id="s2-mod-2">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 2.2</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Toán học Word Embeddings</span>
+              </div>
+              <span class="tag-emerald">Kiến trúc: Skip-gram (SGNS)</span>
+            </div>
+            <h3>Kiến trúc <code>Word2Vec</code> (Skip-gram &amp; CBOW) và Hàm mục tiêu <code>Negative Sampling</code></h3>
+            <p class="prose-text">
+              Dựa trên <strong>Giả thuyết Phân phối (Distributional Hypothesis)</strong> của ngôn ngữ học: <em>"Các từ xuất hiện trong các ngữ cảnh giống nhau thì có nghĩa tương tự nhau"</em>. Thay vì biểu diễn từ bằng vector thưa hàng chục nghìn chiều (One-hot / TF-IDF), <strong>Word2Vec</strong> học cách ánh xạ mỗi từ <span class="math-var">w</span> thành một vector thực đặc <span class="math-var"><b>u</b><sub>w</sub> ∈ ℝ<sup>d</sup></span> (với <span class="math-var">d = 100</span> hoặc <span class="math-var">300</span>) thông qua mạng nơ-ron nông:
+            </p>
+
+            <div class="grid-2">
+              <div class="sub-panel">
+                <h4>1. Hàm Mất mát Skip-gram with Negative Sampling (SGNS)</h4>
+                <p class="prose-text">
+                  Với mỗi từ trung tâm <span class="math-var">w</span> và từ ngữ cảnh thật <span class="math-var">c<sub>pos</sub></span> trong cửa sổ trượt kích thước <span class="math-var">C = 5</span>, mô hình lấy thêm <span class="math-var">K</span> từ nhiễu ngẫu nhiên <span class="math-var">c<sub>neg, i</sub></span> (Negative Samples) và tối đa hóa hàm mục tiêu:
+                </p>
+                <div class="formula-box">
+                  <div class="math-eq" role="math" aria-label="Hàm mục tiêu Skip-gram Negative Sampling">
+                    <span><i>J</i><sub>SGNS</sub></span>
+                    <span class="math-op">=</span>
+                    <span class="math-func">ln</span><span> <i>σ</i>(<b>u</b><sub>w</sub> · <b>v</b><sub>c_pos</sub>)</span>
+                    <span class="math-op">+</span>
+                    <span>∑<sub><i>i</i>=1..<i>K</i></sub> <span class="math-func">ln</span> <i>σ</i>(−<b>u</b><sub>w</sub> · <b>v</b><sub>c_neg,<i>i</i></sub>)</span>
+                  </div>
+                  <div class="formula-legend">
+                    <span class="legend-pill"><strong><i>σ</i>(<i>z</i>) = 1 / (1 + e<sup>−<i>z</i></sup>):</strong> Hàm Sigmoid</span>
+                    <span class="legend-pill"><strong><i>K</i> = 5..10:</strong> Số mẫu âm (Negative Samples)</span>
+                  </div>
                 </div>
               </div>
-              <ul class="bullet-list">
-                <li><strong>Skip-gram (Word2Vec):</strong> Dự đoán các từ ngữ cảnh xung quanh từ trung tâm <span class="math-var">w<sub>t</sub></span>.</li>
-                <li><strong>PhoW2V (VinAI Research):</strong> Được huấn luyện trên 20GB văn bản tiếng Việt (Wikipedia + News) đã tách từ bằng <code>VnCoreNLP</code>, tạo thành các cụm ngữ nghĩa sắc nét.</li>
-              </ul>
+
+              <div class="sub-panel">
+                <h4>2. Độ tương đồng Cosine &amp; Đại số Tuyến tính Ngữ nghĩa</h4>
+                <p class="prose-text">
+                  Sau khi huấn luyện, khoảng cách ngữ nghĩa giữa hai từ tiếng Việt <span class="math-var"><b>u</b>, <b>v</b> ∈ ℝ<sup>300</sup></span> được đo bằng cosin của góc <span class="math-var">θ</span> giữa chúng:
+                </p>
+                <div class="formula-box">
+                  <div class="math-eq" role="math" aria-label="Công thức Cosine Similarity">
+                    <span class="math-func">CosineSim</span><span>(<b>u</b>, <b>v</b>)</span>
+                    <span class="math-op">=</span>
+                    <span class="math-frac">
+                      <span class="math-frac-num"><b>u</b> · <b>v</b></span>
+                      <span class="math-frac-den">‖<b>u</b>‖<sub>2</sub> × ‖<b>v</b>‖<sub>2</sub></span>
+                    </span>
+                    <span class="math-op">=</span>
+                    <span>cos(<i>θ</i>) ∈ [−1, 1]</span>
+                  </div>
+                  <div class="formula-legend">
+                    <span class="legend-pill"><strong>Analogy:</strong> <b>v</b>(<code>"Hà_Nội"</code>) − <b>v</b>(<code>"Việt_Nam"</code>) + <b>v</b>(<code>"Nhật_Bản"</code>) ≈ <b>v</b>(<code>"Tokyo"</code>)</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 2.3: PHOW2V & GIỚI HẠN ĐA NGHĨA -->
+          <article class="card" id="s2-mod-3">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 2.3</span>
+                <span class="read-time-badge">Thời lượng đọc: 8 phút • Pretrained Embeddings Tiếng Việt</span>
+              </div>
+              <span class="tag-emerald">VinAI Research: PhoW2V (100D &amp; 300D)</span>
+            </div>
+            <h3>Giải phẫu <code>PhoW2V</code>, <code>FastText Tiếng Việt</code> &amp; Nút thắt Từ Đa nghĩa (Polysemy Bottleneck)</h3>
+            <p class="prose-text">
+              Năm 2020, nhóm nghiên cứu <strong>VinAI Research</strong> công bố bộ vector từ <strong><code>PhoW2V</code></strong> được huấn luyện trên kho dữ liệu <strong>20GB văn bản tiếng Việt</strong> (Wikipedia tiếng Việt + Tin tức báo chí) đã được tách từ bằng <code>VnCoreNLP (RDRSegmenter)</code>. Hiểu rõ sự khác biệt giữa các dòng Embedding tĩnh và giới hạn của chúng là chìa khóa để biết khi nào cần chuyển sang Transformer:
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mô hình Embedding</th>
+                  <th>Đơn vị Token</th>
+                  <th>Xử lý từ ngoài từ điển (OOV)</th>
+                  <th>Giới hạn Cốt lõi (Polysemy Bottleneck)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong><code>PhoW2V (word-level)</code></strong><br/><small class="muted">100D / 300D • VinAI</small></td>
+                  <td>Từ đã tách bằng dấu <code>_</code> (<code>trí_tuệ_nhân_tạo</code>)</td>
+                  <td>Không sinh được vector cho từ hoàn toàn mới chưa có trong từ điển (báo lỗi <code>KeyError</code>).</td>
+                  <td>Mỗi từ trong từ điển chỉ có <strong>1 vector cố định duy nhất</strong> bất kể ngữ cảnh câu.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>FastText Vietnamese</code></strong><br/><small class="muted">300D • Facebook AI</small></td>
+                  <td>Từ / Âm tiết + <strong>Character N-grams</strong> (3–6 ký tự)</td>
+                  <td><span class="tag-emerald">✓ Rất tốt</span> Ghép tổng vector của các cụm ký tự con nên chịu được lỗi chính tả nhẹ.</td>
+                  <td>Vẫn là Static Embedding: không phân biệt được nghĩa ngữ cảnh của từ đồng âm.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>PhoBERT / BGE-M3</code></strong><br/><small class="muted">768D / 1024D • Contextual</small></td>
+                  <td>Subword BPE / SentencePiece + <strong>Self-Attention</strong></td>
+                  <td><span class="tag-emerald">✓ Tuyệt đối</span> Tách thành các subword có trong từ điển 64k–250k.</td>
+                  <td><span class="tag-emerald">✓ Giải quyết triệt để Đa nghĩa:</span> Vector của từ thay đổi linh hoạt theo toàn bộ câu!</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout-box callout-info">
+              <strong>Ví dụ Kinh điển về Hiện tượng Đồng âm / Đa nghĩa trong Tiếng Việt:</strong>
+              Xét từ <strong><code>"đường"</code></strong> trong 3 câu: (1) <em>"Cho thêm 2 thìa <strong>đường</strong> vào ly cà phê"</em> (sugar), (2) <em>"Tuyến <strong>đường</strong> cao tốc Bắc Nam"</em> (road), và (3) <em>"<strong>Đường</strong> truyền cáp quang bị gián đoạn"</em> (network line). Trong <code>PhoW2V</code> hoặc <code>Word2Vec</code>, chữ <code>"đường"</code> ở cả 3 câu buộc phải dùng chung 1 vector trung bình cộng duy nhất! Đây chính là động lực ra đời của cơ chế <strong>Self-Attention trong Giai đoạn 3 (PhoBERT)</strong>.
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 2.4 & 2.5: PIPELINE UIT-VSFC & CODE -->
+          <article class="card" id="s2-mod-4">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 2.4 &amp; 2.5</span>
+                <span class="read-time-badge">Thời lượng đọc: 8 phút • Thực chiến UIT-VSFC &amp; Code</span>
+              </div>
+              <span class="tag-emerald">Benchmark: ~89.4% Macro-F1 trên CPU</span>
+            </div>
+            <h3>Thiết kế Pipeline <code>TF-IDF + LinearSVC</code> trên Tập <code>UIT-VSFC</code> &amp; Mã nguồn Chuẩn</h3>
+            <p class="prose-text">
+              Tập dữ liệu chuẩn <strong><code>UIT-VSFC (Vietnamese Students' Feedback Corpus)</code></strong> gồm 16,175 câu phản hồi sinh viên (11,426 train / 1,583 validation / 3,166 test) được gán 3 nhãn cảm xúc: <code>0: Negative (Tiêu cực ~46%)</code>, <code>1: Neutral (Trung tính ~4%)</code>, và <code>2: Positive (Tích cực ~50%)</code>. Vì nhãn <code>Neutral</code> chỉ chiếm 4%, nếu chỉ nhìn <em>Accuracy</em> sẽ bị ảo tưởng — ta bắt buộc phải đánh giá bằng <strong>Macro-F1</strong> và bật <strong><code>class_weight="balanced"</code></strong>:
+            </p>
+
+            <div class="code-window" id="s2-mod-5">
+              <div class="code-window-header">
+                <span class="code-window-title">
+                  <svg class="svg-icon" width="15" height="15"><use href="#ic-terminal"></use></svg>
+                  <span>02_Classical_and_Embeddings/01_tfidf_word2vec_phow2v.ipynb — Baseline TF-IDF + LinearSVC &amp; PhoW2V</span>
+                </span>
+                <button class="btn-copy-code" type="button" data-copy-target="code-stage-2">
+                  <svg class="svg-icon" width="14" height="14"><use href="#ic-code-2"></use></svg>
+                  <span>Copy Code</span>
+                </button>
+              </div>
+              <pre class="code-block" id="code-stage-2"><code>from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report
+from gensim.models import KeyedVectors
+
+# 1. Pipeline Phân loại Cảm xúc Tiếng Việt tốc độ cao (đã qua bước tách từ '_')
+clf_pipeline = Pipeline([
+    ("tfidf", TfidfVectorizer(
+        ngram_range=(1, 2),      # Kết hợp Unigram &amp; Bigram từ ghép ("không dễ_hiểu")
+        sublinear_tf=True,       # Áp dụng 1 + ln(tf) chống nhiễu câu dài
+        min_df=2,
+        max_df=0.95,
+    )),
+    ("svm", LinearSVC(
+        C=0.8,
+        class_weight="balanced", # Cân bằng trọng số cho nhãn Neutral (chỉ chiếm 4% UIT-VSFC)
+        random_state=42,
+    )),
+])
+
+# 2. Tải Pretrained PhoW2V (VinAI Research) &amp; Truy vấn từ đồng nghĩa + Analogy
+# Tải file từ: https://github.com/VinAIResearch/PhoW2V
+# phow2v = KeyedVectors.load_word2vec_format("word2vec_vi_words_300dims.txt", binary=False)
+# print(phow2v.most_similar(positive=["hà_nội", "nhật_bản"], negative=["việt_nam"], topn=3))</code></pre>
+            </div>
+
+            <div class="stage-footer-cta mt-16">
+              <div>
+                <h4>Khám phá Không gian Vector 2D Tương tác ngay bây giờ!</h4>
+                <p class="muted">Chuyển sang tab <strong>Phòng Thí Nghiệm Tương Tác</strong> để click chọn từng từ tiếng Việt trên biểu đồ Canvas 60fps và thử nghiệm bộ phân loại cảm xúc UIT-VSFC.</p>
+              </div>
+              <button class="btn-primary" type="button" data-Jump-Tab="sandbox">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-terminal"></use></svg>
+                <span>Mở Phòng Thí Nghiệm 2D Embedding</span>
+              </button>
+            </div>
+          </article>
         </div>
 
         <!-- Tab 2: Live Sandbox Stage 2 (Interactive 2D Embedding Canvas) -->
@@ -979,11 +1539,121 @@
             </div>
           </div>
 
-          <div class="grid-2">
-            <div class="card">
-              <h3>1. Kiến trúc <code>PhoBERT</code> &amp; Subword Label Alignment (NER)</h3>
-              <p class="muted">Khi từ ghép dài bị BPE chia nhỏ bằng dấu <code>@@</code>, nhãn IOB2 được căn chỉnh như thế nào?</p>
-              <div class="svg-diagram-box">
+          <!-- Quick Jump Curriculum TOC for Stage 3 -->
+          <nav class="lesson-toc" aria-label="Mục lục chuyên đề Giai đoạn 3">
+            <span class="toc-label">
+              <svg class="svg-icon" width="15" height="15"><use href="#ic-book-open"></use></svg>
+              <span>5 CHUYÊN ĐỀ CHUYÊN SÂU:</span>
+            </span>
+            <a class="toc-chip" href="#s3-mod-1">3.1 Kiến trúc PhoBERT-v2 &amp; Giới hạn 256 Tokens</a>
+            <a class="toc-chip" href="#s3-mod-2">3.2 PhoNLP NER &amp; Subword Alignment (-100)</a>
+            <a class="toc-chip" href="#s3-mod-3">3.3 VietAI/vit5 Encoder-Decoder &amp; ROUGE</a>
+            <a class="toc-chip" href="#s3-mod-4">3.4 Chiến lược Fine-tuning &amp; Hyperparameters</a>
+            <a class="toc-chip" href="#s3-mod-5">3.5 Code Chuẩn Hugging Face Trainer</a>
+          </nav>
+
+          <div class="pipeline-steps-row">
+            <div class="step-card" style="--stagger: 1">
+              <div class="step-badge">Bước 1 • Subword Tokenization</div>
+              <h4>Fairseq BPE (<code>@@</code>) vs. SentencePiece (<code>▁</code>)</h4>
+              <p><code>PhoBERT</code> yêu cầu tách từ nối <code>_</code> rồi chia BPE 64k từ; trong khi <code>ViT5</code> dùng SentencePiece trực tiếp trên văn bản tự nhiên.</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 2">
+              <div class="step-badge">Bước 2 • Self-Attention</div>
+              <h4>Contextualized Embeddings</h4>
+              <p>Cơ chế Multi-Head Self-Attention cập nhật vector của mỗi từ dựa trên toàn bộ câu, giải quyết triệt để hiện tượng từ đa nghĩa.</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 3">
+              <div class="step-badge">Bước 3 • Task Heads</div>
+              <h4>Sequence / Token / Seq2Seq Heads</h4>
+              <p>Gắn tầng phân loại câu (<code>&lt;s&gt;</code>), phân loại thực thể từng token (<code>IOB2</code> + mask <code>-100</code>), hoặc sinh văn bản với <code>ViT5</code>.</p>
+            </div>
+          </div>
+
+          <!-- CHUYÊN ĐỀ 3.1: KIẾN TRÚC PHOBERT -->
+          <article class="card" id="s3-mod-1">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 3.1</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Kiến trúc Encoder-only</span>
+              </div>
+              <span class="tag-emerald">Notebook: 01_phobert_text_classification_uit_vsfc.ipynb</span>
+            </div>
+            <h3>Giải phẫu Kiến trúc <code>PhoBERT-base-v2</code> &amp; Cách xử lý Giới hạn <code>max_length = 256</code></h3>
+            <p class="prose-text">
+              <strong><code>PhoBERT</code> (Nguyen &amp; Nguyen, EMNLP 2020 Findings)</strong> là mô hình ngôn ngữ tiền huấn luyện (Pretrained Language Model) đầu tiên dành riêng cho tiếng Việt. Thay vì dùng kiến trúc BERT gốc, <code>PhoBERT</code> áp dụng quy trình huấn luyện tối ưu của <strong>RoBERTa (Robustly Optimized BERT Approach)</strong>: loại bỏ hoàn toàn tác vụ Next Sentence Prediction (NSP) và chỉ huấn luyện bằng mục tiêu <strong>Dynamic Masked Language Modeling (MLM — che ngẫu nhiên 15% token khác nhau ở mỗi epoch)</strong>.
+            </p>
+
+            <div class="formula-box">
+              <div class="math-eq" role="math" aria-label="Công thức Scaled Dot-Product Attention và MLM Loss">
+                <span class="math-func">Attention</span><span>(<b>Q</b>, <b>K</b>, <b>V</b>)</span>
+                <span class="math-op">=</span>
+                <span class="math-func">softmax</span>
+                <span>&#40;</span>
+                <span class="math-frac">
+                  <span class="math-frac-num"><b>Q</b> · <b>K</b><sup>⊤</sup></span>
+                  <span class="math-frac-den">√<i>d<sub>k</sub></i></span>
+                </span>
+                <span>&#41; · <b>V</b></span>
+                <span class="math-op">|</span>
+                <span><i>L</i><sub>MLM</sub> = − ∑<sub><i>i</i> ∈ M</sub> <span class="math-func">ln</span> <i>P</i>(<i>x<sub>i</sub></i> | <b>x</b><sub>\M</sub>; <i>θ</i>)</span>
+              </div>
+              <div class="formula-legend">
+                <span class="legend-pill"><strong>PhoBERT-base-v2:</strong> 12 tầng, <i>H</i> = 768, 12 heads (<i>d<sub>k</sub></i> = 64), 135M tham số</span>
+                <span class="legend-pill"><strong>PhoBERT-large:</strong> 24 tầng, <i>H</i> = 1024, 16 heads, 370M tham số</span>
+                <span class="legend-pill"><strong>Dữ liệu Pre-train v2:</strong> 20GB Wikipedia + News + 100GB OSCAR tiếng Việt đã tách từ bằng <code>RDRSegmenter</code></span>
+              </div>
+            </div>
+
+            <div class="worked-example-grid">
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>1. Tại sao Max Length = 256?</span>
+                  <span class="tag-rose">Cần lưu ý khi code</span>
+                </div>
+                <p>
+                  Trong file <code>config.json</code> của PhoBERT, <code>max_position_embeddings = 258</code> (dành 2 vị trí cho <code>&lt;s&gt;</code> mở đầu và <code>&lt;/s&gt;</code> kết thúc). Nếu truyền <code>max_length=512</code>, PyTorch sẽ văng lỗi <code>IndexError: index out of range in self</code> trên GPU!
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>2. Xử lý Văn bản dài (&gt;256 từ)</span>
+                  <span class="tag-emerald">Sliding Window</span>
+                </div>
+                <p>
+                  Với bài báo hoặc hợp đồng dài: chia văn bản thành các đoạn chồng lấp (Overlapping Chunks) dài 240 subwords với bước trượt <code>stride = 64</code>, sau đó lấy <strong>Mean Pooling</strong> hoặc <strong>Attention Pooling</strong> các vector <code>&lt;s&gt;</code> của từng đoạn.
+                </p>
+              </div>
+              <div class="worked-step">
+                <div class="worked-step-title">
+                  <span>3. Đặc thù Fairseq BPE (<code>@@</code>)</span>
+                  <span class="pos-badge">64,000 Subwords</span>
+                </div>
+                <p>
+                  PhoBERT dùng bộ tách subword của <code>fairseq</code>. Khi một từ ghép hiếm bị cắt nhỏ, phần đầu mang ký hiệu nối <strong><code>@@</code></strong> (ví dụ: <code>"Viện_Nghiên_cứu" → ["Viện_Nghiên_@@", "cứu"]</code>).
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 3.2: PHONLP NER & SUBWORD ALIGNMENT -->
+          <article class="card" id="s3-mod-2">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 3.2</span>
+                <span class="read-time-badge">Thời lượng đọc: 9 phút • Gán nhãn Thực thể Chuỗi</span>
+              </div>
+              <span class="tag-emerald">Notebook: 02_phonlp_named_entity_recognition.ipynb</span>
+            </div>
+            <h3>Nhận diện Thực thể Có tên (NER) với <code>PhoNLP</code> &amp; Thuật toán <code>Subword Label Alignment (-100)</code></h3>
+            <p class="prose-text">
+              Trong bài toán <strong>Named Entity Recognition (NER)</strong> trên tập dữ liệu chuẩn <strong><code>VLSP 2016/2018</code></strong> hoặc <strong><code>PhoNER_COVID19</code></strong>, nhãn thực thể được gán theo chuẩn <strong>IOB2</strong> ở cấp độ <strong>từ đã tách (word-level)</strong>: <code>B-PER</code> (Bắt đầu tên người), <code>I-PER</code> (Bên trong tên người), <code>B-LOC</code> (Địa danh), <code>B-ORG</code> (Tổ chức), và <code>O</code> (Outside). Tuy nhiên, khi đi qua BPE Tokenizer của PhoBERT, <strong>1 từ ghép có thể bị bẻ thành 2–4 subwords</strong>. Nếu giữ nguyên mảng nhãn cũ, độ dài chuỗi token và chuỗi nhãn sẽ lệch nhau!
+            </p>
+
+            <div class="grid-2">
+              <div class="svg-diagram-box" style="margin-top: 0;">
                 <svg viewBox="0 0 540 225" class="edu-svg" role="img" aria-label="Minh họa Subword Label Alignment cho từ Viện_Nghiên_cứu">
                   <text x="270" y="25" fill="#cbd5e1" font-size="12.5" font-weight="600" text-anchor="middle">Từ đã tách (VnCoreNLP): "Viện_Nghiên_cứu" (Nhãn gốc: B-ORGANIZATION)</text>
                   <rect x="170" y="36" width="200" height="36" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
@@ -1010,43 +1680,130 @@
                   <text x="385" y="197" fill="#fecdd3" font-size="12" text-anchor="middle">Bỏ qua khi tính Loss</text>
                 </svg>
               </div>
+
+              <div class="sub-panel">
+                <h4>Quy tắc 3 Bước Căn chỉnh Nhãn Subword (Chuẩn Hugging Face &amp; PhoNLP)</h4>
+                <ul class="bullet-list">
+                  <li><strong>Quy tắc 1 (Special Tokens):</strong> Gán nhãn <code>-100</code> cho các token đặc biệt <code>&lt;s&gt;</code>, <code>&lt;/s&gt;</code> và <code>&lt;pad&gt;</code>.</li>
+                  <li><strong>Quy tắc 2 (First Subword):</strong> Subword đầu tiên của mỗi từ ghép (không đứng sau mảnh có đuôi <code>@@</code>) nhận <strong>nguyên vẹn ID nhãn IOB2</strong> của từ gốc đó.</li>
+                  <li><strong>Quy tắc 3 (Continuation Subwords):</strong> Mọi subword nối tiếp của cùng từ đó được gán nhãn <strong><code>-100</code></strong>. Hàm <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> sẽ tự động triệt tiêu đạo hàm tại các vị trí <code>-100</code> để mô hình không bị phạt oan!</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 3.3: VIETAI/VIT5 & TÓM TẮT VĂN BẢN -->
+          <article class="card" id="s3-mod-3">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 3.3</span>
+                <span class="read-time-badge">Thời lượng đọc: 9 phút • Kiến trúc Encoder-Decoder</span>
+              </div>
+              <span class="tag-emerald">Notebook: 03_vit5_abstractive_summarization.ipynb</span>
+            </div>
+            <h3>Mô hình <code>VietAI/vit5</code> (T5 Tiếng Việt) &amp; Tóm tắt Văn bản Trừu tượng trên Tập <code>VietNews</code></h3>
+            <p class="prose-text">
+              Các mô hình chỉ có bộ mã hóa (Encoder-only) như <code>PhoBERT</code> rất xuất sắc trong việc hiểu và phân loại câu, nhưng <strong>không thể tự sinh ra đoạn văn mới</strong> có độ dài tùy ý. Để giải quyết bài toán <strong>Tóm tắt văn bản trừu tượng (Abstractive Summarization)</strong> trên tập <strong><code>VietNews</code></strong> hoặc <strong>Dịch máy (Machine Translation)</strong>, chúng ta sử dụng <strong><code>VietAI/vit5-base</code></strong> (Phan et al., NAACL 2022) dựa trên kiến trúc <strong>Encoder-Decoder T5 (Text-to-Text Transfer Transformer)</strong>:
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tiêu chí Kỹ thuật</th>
+                  <th><code>vinai/phobert-base-v2</code> (Encoder-only)</th>
+                  <th><code>VietAI/vit5-base</code> (Encoder-Decoder Seq2Seq)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cơ chế Attention</strong></td>
+                  <td>Bidirectional Self-Attention (Nhìn 2 chiều toàn câu)</td>
+                  <td>Encoder nhìn 2 chiều + Decoder dùng <strong>Causal Masked Attention &amp; Cross-Attention</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Tiền xử lý Tách từ (<code>_</code>)</strong></td>
+                  <td><span class="tag-rose">! BẮT BUỘC phải nối '_' bằng VnCoreNLP</span></td>
+                  <td><span class="tag-emerald">✓ TUYỆT ĐỐI KHÔNG nối '_'</span> (Dùng SentencePiece <code>▁</code> trên văn bản tự nhiên)</td>
+                </tr>
+                <tr>
+                  <td><strong>Mục tiêu Pre-training</strong></td>
+                  <td>Dynamic Masked Language Modeling (che 15% token đơn lẻ)</td>
+                  <td><strong>Span Corruption:</strong> Che các cụm từ liên tiếp bằng thẻ <code>&lt;extra_id_0&gt;</code> và bắt Decoder sinh lại</td>
+                </tr>
+                <tr>
+                  <td><strong>Độ dài Ngữ cảnh (Max Length)</strong></td>
+                  <td><strong>256 subwords</strong> (Absolute Positional Embeddings)</td>
+                  <td><strong>1024+ subwords</strong> (Relative Position Biases — rất hợp cho bài báo dài)</td>
+                </tr>
+                <tr>
+                  <td><strong>Thước đo Đánh giá chuẩn</strong></td>
+                  <td>Accuracy, Macro-F1, Entity-level Span F1 (<code>seqeval</code>)</td>
+                  <td><strong>ROUGE-1, ROUGE-2, ROUGE-L</strong> (Độ trùng khớp chuỗi con chung dài nhất LCS)</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 3.4 & 3.5: HYPERPARAMETERS & PRODUCTION CODE -->
+          <article class="card" id="s3-mod-4">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 3.4 &amp; 3.5</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Huấn luyện PyTorch &amp; Hugging Face</span>
+              </div>
+              <span class="tag-emerald">Production Code: PhoBERT &amp; ViT5</span>
+            </div>
+            <h3>Kỹ thuật Tinh chỉnh (Fine-tuning) Tránh Hiện tượng Catastrophic Forgetting &amp; Mã nguồn Chuẩn</h3>
+            <p class="prose-text">
+              Khi tinh chỉnh <code>PhoBERT-base-v2</code> hoặc <code>ViT5-base</code> trên tập dữ liệu đặc thù, nếu đặt Learning Rate quá lớn (ví dụ <code>1e-3</code>), đạo hàm lớn ở các bước đầu từ lớp Classifier khởi tạo ngẫu nhiên sẽ phá hỏng các trọng số tiền huấn luyện (hiện tượng <strong>Quên thảm khốc — Catastrophic Forgetting</strong>). Cấu hình chuẩn mực được kiểm chứng thực nghiệm:
+              <strong>Learning Rate = <code>2e-5</code> (cho PhoBERT) hoặc <code>5e-5</code> (cho ViT5)</strong>, <strong>Warmup Ratio = <code>0.1</code></strong>, <strong>Weight Decay = <code>0.01</code></strong>, và <strong>Mixed Precision = <code>fp16=True</code></strong>.
+            </p>
+
+            <div class="code-window" id="s3-mod-5">
+              <div class="code-window-header">
+                <span class="code-window-title">
+                  <svg class="svg-icon" width="15" height="15"><use href="#ic-terminal"></use></svg>
+                  <span>03_Pretrained_Transformers/ — Subword Alignment cho PhoBERT NER &amp; Seq2Seq ViT5</span>
+                </span>
+                <button class="btn-copy-code" type="button" data-copy-target="code-stage-3">
+                  <svg class="svg-icon" width="14" height="14"><use href="#ic-code-2"></use></svg>
+                  <span>Copy Code</span>
+                </button>
+              </div>
+              <pre class="code-block" id="code-stage-3"><code>from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoModelForSeq2SeqLM
+
+# 1. Căn chỉnh nhãn Subword cho PhoBERT NER (xử lý hậu tố '@@' của Fairseq BPE)
+phobert_tok = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
+
+def align_phobert_ner_labels(segmented_words: list[str], word_ner_ids: list[int]):
+    subwords = ["&lt;s&gt;"]
+    label_ids = [-100]  # Bỏ qua token mở đầu &lt;s&gt; khi tính CrossEntropyLoss
+    for word, label_id in zip(segmented_words, word_ner_ids):
+        pieces = phobert_tok.tokenize(word)
+        for idx, piece in enumerate(pieces):
+            subwords.append(piece)
+            # Chỉ giữ nhãn cho subword đầu tiên của từ, các mảnh sau gán -100
+            label_ids.append(label_id if idx == 0 else -100)
+    subwords.append("&lt;/s&gt;")
+    label_ids.append(-100)
+    return phobert_tok.convert_tokens_to_ids(subwords), label_ids
+
+# 2. Tóm tắt văn bản tiếng Việt với VietAI/vit5-base (KHÔNG tách từ '_')
+vit5_tok = AutoTokenizer.from_pretrained("VietAI/vit5-base")
+# input_ids = vit5_tok("vietnews: " + raw_article + " &lt;/s&gt;", return_tensors="pt").input_ids</code></pre>
             </div>
 
-            <div class="card">
-              <h3>2. So sánh <code>PhoBERT-base-v2</code> vs. <code>VietAI/vit5-base</code></h3>
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Tiêu chí</th>
-                    <th><code>vinai/phobert-base-v2</code></th>
-                    <th><code>VietAI/vit5-base</code></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Kiến trúc</strong></td>
-                    <td>Encoder-only (RoBERTa)</td>
-                    <td>Encoder-Decoder (T5)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Yêu cầu tách từ (<code>_</code>)</strong></td>
-                    <td><span class="tag-rose">! BẮT BUỘC (VnCoreNLP)</span></td>
-                    <td><span class="tag-emerald">✓ KHÔNG (Văn bản tự nhiên)</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Độ dài tối đa (Max Length)</strong></td>
-                    <td><strong>256 subwords</strong> (<code>max_pos=258</code>)</td>
-                    <td><strong>1024+ subwords</strong> (Relative Pos)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Bài toán thế mạnh</strong></td>
-                    <td>Phân loại cảm xúc (UIT-VSFC), NER, POS</td>
-                    <td>Tóm tắt văn bản (VietNews), Sinh câu, QA</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="stage-footer-cta mt-16">
+              <div>
+                <h4>Thực hành So sánh Trực tiếp 3 Bộ Tokenizer &amp; Bảng Căn chỉnh Subword!</h4>
+                <p class="muted">Mở <strong>Phòng Thí Nghiệm Giai đoạn 3</strong> để xem cùng một câu tiếng Việt được băm thành token như thế nào dưới góc nhìn của <code>PhoBERT</code>, <code>ViT5</code> và <code>Qwen2.5</code>.</p>
+              </div>
+              <button class="btn-primary" type="button" data-Jump-Tab="sandbox">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-terminal"></use></svg>
+                <span>Mở Phòng Thí Nghiệm Tokenizer &amp; NER</span>
+              </button>
             </div>
-          </div>
+          </article>
         </div>
 
         <!-- Tab 2: Live Sandbox Stage 3 -->
@@ -1140,95 +1897,302 @@
             </div>
           </div>
 
-          <div class="grid-2">
-            <!-- QLoRA Architecture Diagram -->
-            <div class="card">
-              <h3>1. Cơ chế QLoRA: 4-bit NormalFloat (NF4) + Low-Rank Adapters</h3>
-              <p class="muted">Đóng băng trọng số gốc <span class="math-var">W<sub>0</sub></span> ở dạng 4-bit và chỉ huấn luyện 2 ma trận hạng thấp <span class="math-var">A, B</span> (với <span class="math-var">r ≪ d</span>):</p>
-              <div class="formula-box">
-                <div class="math-eq" role="math" aria-label="Công thức QLoRA Forward Pass">
-                  <span><b>h</b></span>
-                  <span class="math-op">=</span>
-                  <span class="math-term-group frozen">
-                    <span><b>W</b><sub>0</sub><sup>(4-bit NF4)</sup> · <b>x</b></span>
-                    <span class="math-term-caption">[Frozen] Đóng băng (~4.5GB)</span>
-                  </span>
-                  <span class="math-op">+</span>
-                  <span class="math-term-group trainable">
-                    <span>
-                      <span class="math-frac">
-                        <span class="math-frac-num"><i>α</i></span>
-                        <span class="math-frac-den"><i>r</i></span>
-                      </span>
-                      · (<b>B</b> × <b>A</b>) · <b>x</b>
-                    </span>
-                    <span class="math-term-caption">[Trainable] Nhánh LoRA (~1% tham số)</span>
-                  </span>
-                </div>
-                <div class="formula-legend">
-                  <span class="legend-pill"><strong>W<sub>0</sub>:</strong> Trọng số gốc 4-bit</span>
-                  <span class="legend-pill"><strong>B ∈ ℝ<sup>d×r</sup>, A ∈ ℝ<sup>r×k</sup>:</strong> Adapter hạng thấp</span>
-                  <span class="legend-pill"><strong>α / r:</strong> Hệ số tỉ lệ LoRA</span>
-                </div>
-              </div>
-              <div class="svg-diagram-box">
-                <svg viewBox="0 0 540 190" class="edu-svg" role="img" aria-label="Sơ đồ QLoRA đóng băng trọng số 4-bit NF4 và huấn luyện nhánh LoRA A, B">
-                  <!-- Base Weight W0 -->
-                  <rect x="30" y="25" width="205" height="130" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
-                  <text x="132" y="72" fill="#f8fafc" font-size="14" font-weight="700" text-anchor="middle">Pretrained Weights W₀</text>
-                  <text x="132" y="96" fill="#38bdf8" font-size="12.5" font-weight="600" text-anchor="middle">Quantized 4-bit NF4 (~4.5 GB)</text>
-                  <text x="132" y="122" fill="#cbd5e1" font-size="12" text-anchor="middle">[Frozen] requires_grad = False</text>
+          <!-- Quick Jump Curriculum TOC for Stage 4 -->
+          <nav class="lesson-toc" aria-label="Mục lục chuyên đề Giai đoạn 4">
+            <span class="toc-label">
+              <svg class="svg-icon" width="15" height="15"><use href="#ic-book-open"></use></svg>
+              <span>5 CHUYÊN ĐỀ CHUYÊN SÂU:</span>
+            </span>
+            <a class="toc-chip" href="#s4-mod-1">4.1 Hệ sinh thái LLM Tiếng Việt &amp; Token Fertility</a>
+            <a class="toc-chip" href="#s4-mod-2">4.2 Toán học QLoRA 4-bit NF4 &amp; Adapter</a>
+            <a class="toc-chip" href="#s4-mod-3">4.3 Công thức Hybrid Search (BM25 + BGE-M3 + RRF)</a>
+            <a class="toc-chip" href="#s4-mod-4">4.4 Kiến trúc Đồ thị LangGraph Self-RAG</a>
+            <a class="toc-chip" href="#s4-mod-5">4.5 Code Chuẩn Unsloth QLoRA &amp; LangGraph</a>
+          </nav>
 
-                  <!-- LoRA Branch A and B -->
-                  <path d="M 275 142 L 335 95 L 275 48 Z" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-                  <text x="395" y="48" fill="#6ee7b7" font-size="13" font-weight="700" text-anchor="middle">Ma trận B (d × r)</text>
-                  <rect x="325" y="56" width="145" height="32" rx="6" fill="#065f46" stroke="#10b981"/>
-                  <text x="397" y="77" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Rank r = 16 (BF16)</text>
-
-                  <rect x="325" y="100" width="145" height="32" rx="6" fill="#065f46" stroke="#10b981"/>
-                  <text x="397" y="121" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Ma trận A (r × k)</text>
-                  <text x="397" y="154" fill="#34d399" font-size="12.5" font-weight="700" text-anchor="middle">✓ Chỉ train ~40M tham số!</text>
-                </svg>
-              </div>
+          <div class="pipeline-steps-row">
+            <div class="step-card" style="--stagger: 1">
+              <div class="step-badge">Trụ cột 1 • Instruction Tuning</div>
+              <h4>QLoRA 4-bit NormalFloat (NF4)</h4>
+              <p>Nén trọng số gốc 7B–14B xuống 4-bit (~4.5GB VRAM) và chỉ huấn luyện các ma trận hạng thấp <span class="math-var">A, B</span> trên dữ liệu hội thoại tiếng Việt.</p>
             </div>
-
-            <!-- Hybrid Agentic RAG Diagram -->
-            <div class="card">
-              <h3>2. Luồng Đồ thị <code>LangGraph Agentic Self-RAG</code> Tiếng Việt</h3>
-              <p class="muted">Kết hợp tìm kiếm từ khóa chính xác (BM25 đã tách từ) + Ngữ nghĩa (BGE-M3) + Tự kiểm định chống ảo giác:</p>
-              <div class="svg-diagram-box">
-                <svg viewBox="0 0 540 220" class="edu-svg" role="img" aria-label="Sơ đồ LangGraph Agentic RAG gồm 4 nút Query, Hybrid Search, Doc Grader, Generate">
-                  <!-- Nodes -->
-                  <rect x="18" y="80" width="108" height="54" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-                  <text x="72" y="103" fill="#e0f2fe" font-size="12" font-weight="700" text-anchor="middle">1. Query Input</text>
-                  <text x="72" y="122" fill="#7dd3fc" font-size="12" text-anchor="middle">NFC + Tách từ</text>
-
-                  <line x1="126" y1="107" x2="154" y2="107" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
-
-                  <rect x="154" y="65" width="128" height="84" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
-                  <text x="218" y="90" fill="#f3e8ff" font-size="12" font-weight="700" text-anchor="middle">2. Hybrid Search</text>
-                  <text x="218" y="110" fill="#d8b4fe" font-size="12" text-anchor="middle">• BM25 (Word Seg)</text>
-                  <text x="218" y="128" fill="#d8b4fe" font-size="12" text-anchor="middle">• Dense (BGE-M3)</text>
-
-                  <line x1="282" y1="107" x2="308" y2="107" stroke="#a855f7" stroke-width="2.5" class="svg-flow-line"/>
-
-                  <rect x="308" y="75" width="108" height="64" rx="10" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
-                  <text x="362" y="100" fill="#fef3c7" font-size="12" font-weight="700" text-anchor="middle">3. Doc Grader</text>
-                  <text x="362" y="120" fill="#fde68a" font-size="12" text-anchor="middle">Score &gt;= 0.42?</text>
-
-                  <line x1="416" y1="107" x2="440" y2="107" stroke="#10b981" stroke-width="2.5" class="svg-flow-line"/>
-
-                  <rect x="440" y="80" width="86" height="54" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-                  <text x="483" y="103" fill="#d1fae5" font-size="12" font-weight="700" text-anchor="middle">4. Generate</text>
-                  <text x="483" y="122" fill="#6ee7b7" font-size="12" text-anchor="middle">Qwen / Gemini</text>
-
-                  <!-- Rewrite Loop -->
-                  <path d="M 362 75 L 362 30 L 72 30 L 72 80" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,4"/>
-                  <text x="217" y="22" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">Nếu không liên quan → Query Rewriter viết lại câu hỏi</text>
-                </svg>
-              </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 2">
+              <div class="step-badge">Trụ cột 2 • Hybrid Retrieval</div>
+              <h4>BM25 (Tách từ) + Dense <code>BGE-M3</code></h4>
+              <p>Kết hợp khớp từ khóa chính xác (mã luật, tên riêng) với tìm kiếm ngữ nghĩa đa ngôn ngữ qua công thức Reciprocal Rank Fusion (RRF).</p>
+            </div>
+            <div class="step-arrow" aria-hidden="true">→</div>
+            <div class="step-card" style="--stagger: 3">
+              <div class="step-badge">Trụ cột 3 • Agentic Workflow</div>
+              <h4>Đồ thị Trạng thái <code>LangGraph</code></h4>
+              <p>Tự động chấm điểm độ liên quan của tài liệu (Document Grader) và viết lại câu truy vấn (Query Rewriter) để triệt tiêu ảo giác.</p>
             </div>
           </div>
+
+          <!-- CHUYÊN ĐỀ 4.1: HỆ SINH THÁI LLM TIẾNG VIỆT & TOKEN FERTILITY -->
+          <article class="card" id="s4-mod-1">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 4.1</span>
+                <span class="read-time-badge">Thời lượng đọc: 8 phút • Kiến trúc Decoder-only LLM</span>
+              </div>
+              <span class="tag-emerald">Models: Qwen2.5, Sailor2, URA-LLaMA</span>
+            </div>
+            <h3>Hệ sinh thái LLM Tiếng Việt Mở &amp; Tại sao Chỉ số <code>Token Fertility Rate</code> Quyết định Tốc độ Suy luận?</h3>
+            <p class="prose-text">
+              Khi lựa chọn một mô hình ngôn ngữ lớn (Decoder-only LLM) để triển khai cho tiếng Việt, yếu tố kỹ thuật quan trọng bậc nhất là <strong>Token Fertility Rate (Số lượng subword token trung bình cần để mã hóa 1 từ tiếng Việt)</strong>. Các mô hình thế hệ đầu như <code>LLaMA-1/2</code> có từ điển chỉ 32,000 tokens chủ yếu là tiếng Anh, nên mỗi chữ tiếng Việt có dấu bị bẻ thành 3–4 byte tokens rời rạc, làm <strong>tốn gấp 3 lần bộ nhớ KV-Cache và chậm gấp 3 lần tốc độ sinh chữ</strong>!
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Họ Mô hình LLM</th>
+                  <th>Đơn vị phát triển</th>
+                  <th>Kích thước Vocab</th>
+                  <th>Fertility Rate (Token/Từ VN)</th>
+                  <th>Đặc điểm nổi bật khi làm Fine-tuning &amp; RAG Tiếng Việt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong><code>Qwen2.5-7B / 14B-Instruct</code></strong></td>
+                  <td>Alibaba Cloud Qwen</td>
+                  <td>152,064 tokens</td>
+                  <td><span class="tag-emerald">~1.25 (Rất tối ưu)</span></td>
+                  <td>Hỗ trợ ngữ cảnh tới 128K tokens, khả năng suy luận logic, gọi hàm (Tool Calling) và tuân thủ định dạng JSON tiếng Việt xuất sắc.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>Sailor2-8B / 20B-Chat</code></strong></td>
+                  <td>SeaAI Lab (Đông Nam Á)</td>
+                  <td>151,646 tokens</td>
+                  <td><span class="tag-emerald">~1.22 (Tối ưu ĐNÁ)</span></td>
+                  <td>Được tiếp tục tiền huấn luyện (Continual Pre-training) chuyên sâu trên kho văn bản tiếng Việt và các ngôn ngữ Đông Nam Á.</td>
+                </tr>
+                <tr>
+                  <td><strong><code>URA-LLaMA-7B / 8B</code></strong></td>
+                  <td>ĐH Bách Khoa TP.HCM (<code>ura-hcmut</code>)</td>
+                  <td>Mở rộng từ điển Tiếng Việt</td>
+                  <td>~1.35</td>
+                  <td>Nguồn tài nguyên học thuật mở tiêu biểu tại Việt Nam, tối ưu tốt cho văn phong văn bản hành chính, giáo dục và hỏi đáp tiếng Việt.</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 4.2: TOÁN HỌC QLORA 4-BIT NF4 -->
+          <article class="card" id="s4-mod-2">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 4.2</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Lượng tử hóa &amp; PEFT</span>
+              </div>
+              <span class="tag-emerald">Notebook: 01_qlora_finetuning_qwen_vietnamese.ipynb</span>
+            </div>
+            <h3>Toán học đằng sau <code>LoRA</code> &amp; <code>QLoRA</code>: 4-bit NormalFloat (NF4), Double Quantization &amp; Low-Rank Adapters</h3>
+            <p class="prose-text">
+              Huấn luyện toàn bộ tham số (Full Fine-tuning) một mô hình 7 tỷ tham số ở chuẩn 16-bit đòi hỏi <strong>14GB cho trọng số + 14GB cho đạo hàm + 28GB cho trạng thái AdamW = ~56GB VRAM</strong> (vượt quá khả năng của GPU phổ thông). <strong>QLoRA (Dettmers et al., NeurIPS 2023)</strong> giảm mức tiêu thụ xuống chỉ còn <strong>~8GB – 10GB VRAM</strong> (chạy mượt trên 1 GPU Colab T4 16GB) nhờ 3 đột phá toán học:
+            </p>
+
+            <div class="grid-2">
+              <div>
+                <div class="formula-box">
+                  <div class="math-eq" role="math" aria-label="Công thức QLoRA Forward Pass">
+                    <span><b>h</b></span>
+                    <span class="math-op">=</span>
+                    <span class="math-term-group frozen">
+                      <span><span class="math-func">dequant</span>(<b>W</b><sub>0</sub><sup>NF4</sup>) · <b>x</b></span>
+                      <span class="math-term-caption">[Frozen] Đóng băng 4-bit (~4.5GB)</span>
+                    </span>
+                    <span class="math-op">+</span>
+                    <span class="math-term-group trainable">
+                      <span>
+                        <span class="math-frac">
+                          <span class="math-frac-num"><i>α</i></span>
+                          <span class="math-frac-den"><i>r</i></span>
+                        </span>
+                        · (<b>B</b> × <b>A</b>) · <b>x</b>
+                      </span>
+                      <span class="math-term-caption">[Trainable] Adapter BF16 (~1% tham số)</span>
+                    </span>
+                  </div>
+                  <div class="formula-legend">
+                    <span class="legend-pill"><strong><b>W</b><sub>0</sub> ∈ ℝ<sup><i>d</i>×<i>k</i></sup>:</strong> Ma trận gốc đóng băng</span>
+                    <span class="legend-pill"><strong><b>B</b> ∈ ℝ<sup><i>d</i>×<i>r</i></sup>, <b>A</b> ∈ ℝ<sup><i>r</i>×<i>k</i></sup>:</strong> Khởi tạo <b>B</b> = 0, <b>A</b> ~ N(0, σ²)</span>
+                    <span class="legend-pill"><strong>Rank <i>r</i> = 16, <i>α</i> = 32:</strong> Giảm 99% số tham số cần tính Gradient!</span>
+                  </div>
+                </div>
+                <ul class="bullet-list">
+                  <li><strong>1. Kiểu dữ liệu 4-bit NormalFloat (NF4):</strong> Trọng số mạng nơ-ron tiền huấn luyện luôn tuân theo phân phối chuẩn Gauss <span class="math-var">N(0, σ²)</span>. NF4 chia 16 mức lượng tử sao cho mỗi khoảng có diện tích xác suất bằng nhau (Equal-Area Quantiles), đạt sai số thông tin thấp nhất về mặt lý thuyết.</li>
+                  <li><strong>2. Double Quantization (Lượng tử hóa kép):</strong> Lượng tử hóa tiếp các hằng số tỉ lệ (Quantization Scales) từ FP32 xuống FP8 với kích thước khối 64, tiết kiệm thêm ~0.37 bits/tham số (~500MB VRAM cho mô hình 7B).</li>
+                </ul>
+              </div>
+
+              <div class="svg-diagram-box" style="margin-top: 0;">
+                <svg viewBox="0 0 540 220" class="edu-svg" role="img" aria-label="Sơ đồ QLoRA đóng băng trọng số 4-bit NF4 và huấn luyện nhánh LoRA A, B">
+                  <!-- Base Weight W0 -->
+                  <rect x="26" y="32" width="210" height="150" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                  <text x="131" y="75" fill="#f8fafc" font-size="14" font-weight="700" text-anchor="middle">Pretrained Weights W₀</text>
+                  <text x="131" y="102" fill="#38bdf8" font-size="12.5" font-weight="600" text-anchor="middle">Quantized 4-bit NF4 (~4.5 GB)</text>
+                  <text x="131" y="128" fill="#cbd5e1" font-size="12" text-anchor="middle">[Frozen] requires_grad = False</text>
+                  <text x="131" y="154" fill="#94a3b8" font-size="11.5" text-anchor="middle">q_proj, k_proj, v_proj, o_proj</text>
+
+                  <!-- LoRA Branch A and B -->
+                  <path d="M 272 158 L 332 107 L 272 56 Z" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                  <text x="398" y="48" fill="#6ee7b7" font-size="13" font-weight="700" text-anchor="middle">Ma trận B (d × r) • Khởi tạo = 0</text>
+                  <rect x="320" y="58" width="165" height="36" rx="6" fill="#065f46" stroke="#10b981"/>
+                  <text x="402" y="81" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Low-Rank Bottleneck r = 16</text>
+
+                  <rect x="320" y="110" width="165" height="36" rx="6" fill="#065f46" stroke="#10b981"/>
+                  <text x="402" y="133" fill="#ecfdf5" font-size="12" font-weight="600" text-anchor="middle">Ma trận A (r × k) • Gaussian</text>
+                  <text x="402" y="170" fill="#34d399" font-size="12.5" font-weight="700" text-anchor="middle">✓ Chỉ train ~40M tham số (BF16)!</text>
+                </svg>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 4.3: TOÁN HỌC HYBRID RETRIEVAL (BM25 + BGE-M3 + RRF) -->
+          <article class="card" id="s4-mod-3">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 4.3</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Toán học Truy xuất Thông tin</span>
+              </div>
+              <span class="tag-emerald">Dataset: UIT-ViQuAD 2.0 (23,000+ cặp QA)</span>
+            </div>
+            <h3>Toán học <code>Hybrid Retrieval</code> cho Tiếng Việt: <code>Okapi BM25</code> (Tách từ) + <code>BGE-M3</code> + <code>Reciprocal Rank Fusion</code></h3>
+            <p class="prose-text">
+              Trong hệ thống RAG doanh nghiệp tại Việt Nam (tra cứu văn bản pháp luật, quy trình kỹ thuật, tài liệu y khoa), nếu chỉ dùng <strong>Dense Vector Search</strong>, mô hình thường tìm sai khi câu hỏi chứa <strong>số hiệu điều khoản (<code>Nghị định 13/2023/NĐ-CP</code>), mã sản phẩm hoặc tên riêng hiếm</strong>. Ngược lại, nếu chỉ dùng <strong>BM25</strong>, hệ thống không hiểu được các cách diễn đạt đồng nghĩa. Giải pháp chuẩn Production là kết hợp cả hai qua <strong>Okapi BM25 (đã tách từ tiếng Việt) + Dense Embedding (<code>BAAI/bge-m3</code> / <code>halong_embedding</code>)</strong>:
+            </p>
+
+            <div class="formula-box">
+              <div class="math-eq" role="math" aria-label="Công thức Okapi BM25 và Reciprocal Rank Fusion">
+                <span class="math-func">BM25</span><span>(<i>Q</i>, <i>D</i>)</span>
+                <span class="math-op">=</span>
+                <span>∑<sub><i>q</i> ∈ <i>Q</i></sub> <span class="math-func">IDF</span>(<i>q</i>) ·</span>
+                <span class="math-frac">
+                  <span class="math-frac-num"><span class="math-func">tf</span>(<i>q</i>, <i>D</i>) · (<i>k</i><sub>1</sub> + 1)</span>
+                  <span class="math-frac-den"><span class="math-func">tf</span>(<i>q</i>, <i>D</i>) + <i>k</i><sub>1</sub> · &#91; 1 − <i>b</i> + <i>b</i> · (|<i>D</i>| / <span class="math-func">avgdl</span>) &#93;</span>
+                </span>
+                <span class="math-op">|</span>
+                <span class="math-func">RRF</span><span>(<i>d</i>) = </span>
+                <span class="math-frac">
+                  <span class="math-frac-num"><i>w</i><sub>lex</sub></span>
+                  <span class="math-frac-den"><i>k</i> + <span class="math-func">rank</span><sub>BM25</sub>(<i>d</i>)</span>
+                </span>
+                <span class="math-op">+</span>
+                <span class="math-frac">
+                  <span class="math-frac-num"><i>w</i><sub>sem</sub></span>
+                  <span class="math-frac-den"><i>k</i> + <span class="math-func">rank</span><sub>Dense</sub>(<i>d</i>)</span>
+                </span>
+              </div>
+              <div class="formula-legend">
+                <span class="legend-pill"><strong><i>k</i><sub>1</sub> = 1.5:</strong> Ngưỡng bão hòa tần suất lặp từ khóa</span>
+                <span class="legend-pill"><strong><i>b</i> = 0.75:</strong> Hệ số chuẩn hóa độ dài văn bản |<i>D</i>| / avgdl</span>
+                <span class="legend-pill"><strong>RRF (<i>k</i> = 60):</strong> Hợp nhất thứ hạng không phụ thuộc thang điểm tuyệt đối giữa BM25 và Cosine</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- CHUYÊN ĐỀ 4.4 & 4.5: ĐỒ THỊ LANGGRAPH SELF-RAG & PRODUCTION CODE -->
+          <article class="card" id="s4-mod-4">
+            <div class="module-header-bar">
+              <div class="module-badge-group">
+                <span class="module-number-badge">CHUYÊN ĐỀ 4.4 &amp; 4.5</span>
+                <span class="read-time-badge">Thời lượng đọc: 10 phút • Agentic Workflow &amp; Code</span>
+              </div>
+              <span class="tag-emerald">Notebook: 02_vietnamese_rag_langgraph_pipeline.ipynb</span>
+            </div>
+            <h3>Thiết kế Đồ thị Trạng thái <code>LangGraph Agentic Self-RAG</code> Chống Ảo giác &amp; Mã nguồn Chuẩn</h3>
+            <p class="prose-text">
+              Một pipeline RAG tuyến tính cổ điển (<code>Retrieve → Generate</code>) sẽ bị <strong>ảo giác (Hallucination)</strong> nếu bộ truy xuất trả về các đoạn văn không chứa câu trả lời (đặc biệt phổ biến trên tập <strong><code>UIT-ViQuAD 2.0</code></strong> vốn có hàng nghìn câu hỏi <em>Unanswerable</em>). Với <strong><code>LangGraph</code></strong>, chúng ta mô hình hóa luồng suy luận thành một <strong>Đồ thị Trạng thái Có chu trình (Cyclic StateGraph)</strong> gồm 4 nút chuyên biệt:
+            </p>
+
+            <div class="svg-diagram-box">
+              <svg viewBox="0 0 540 220" class="edu-svg" role="img" aria-label="Sơ đồ LangGraph Agentic RAG gồm 4 nút Query, Hybrid Search, Doc Grader, Generate">
+                <!-- Nodes -->
+                <rect x="18" y="80" width="108" height="54" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                <text x="72" y="103" fill="#e0f2fe" font-size="12" font-weight="700" text-anchor="middle">1. Query Input</text>
+                <text x="72" y="122" fill="#7dd3fc" font-size="12" text-anchor="middle">NFC + Tách từ</text>
+
+                <line x1="126" y1="107" x2="154" y2="107" stroke="#38bdf8" stroke-width="2.5" class="svg-flow-line"/>
+
+                <rect x="154" y="65" width="128" height="84" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+                <text x="218" y="90" fill="#f3e8ff" font-size="12" font-weight="700" text-anchor="middle">2. Hybrid Search</text>
+                <text x="218" y="110" fill="#d8b4fe" font-size="12" text-anchor="middle">• BM25 (Word Seg)</text>
+                <text x="218" y="128" fill="#d8b4fe" font-size="12" text-anchor="middle">• Dense (BGE-M3)</text>
+
+                <line x1="282" y1="107" x2="308" y2="107" stroke="#a855f7" stroke-width="2.5" class="svg-flow-line"/>
+
+                <rect x="308" y="75" width="108" height="64" rx="10" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+                <text x="362" y="100" fill="#fef3c7" font-size="12" font-weight="700" text-anchor="middle">3. Doc Grader</text>
+                <text x="362" y="120" fill="#fde68a" font-size="12" text-anchor="middle">Score &gt;= 0.42?</text>
+
+                <line x1="416" y1="107" x2="440" y2="107" stroke="#10b981" stroke-width="2.5" class="svg-flow-line"/>
+
+                <rect x="440" y="80" width="86" height="54" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                <text x="483" y="103" fill="#d1fae5" font-size="12" font-weight="700" text-anchor="middle">4. Generate</text>
+                <text x="483" y="122" fill="#6ee7b7" font-size="12" text-anchor="middle">Qwen / Gemini</text>
+
+                <!-- Rewrite Loop -->
+                <path d="M 362 75 L 362 30 L 72 30 L 72 80" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,4"/>
+                <text x="217" y="22" fill="#fda4af" font-size="12" font-weight="600" text-anchor="middle">Nếu không liên quan → Query Rewriter viết lại câu hỏi (Tối đa 2 vòng lặp)</text>
+              </svg>
+            </div>
+
+            <div class="code-window" id="s4-mod-5">
+              <div class="code-window-header">
+                <span class="code-window-title">
+                  <svg class="svg-icon" width="15" height="15"><use href="#ic-terminal"></use></svg>
+                  <span>04_Vietnamese_LLMs_and_Agents/ — QLoRA 4-bit Config &amp; LangGraph StateGraph</span>
+                </span>
+                <button class="btn-copy-code" type="button" data-copy-target="code-stage-4">
+                  <svg class="svg-icon" width="14" height="14"><use href="#ic-code-2"></use></svg>
+                  <span>Copy Code</span>
+                </button>
+              </div>
+              <pre class="code-block" id="code-stage-4"><code>import torch
+from transformers import BitsAndBytesConfig
+from peft import LoraConfig
+from langgraph.graph import StateGraph, START, END
+from typing import TypedDict, List
+
+# 1. Cấu hình lượng tử hóa QLoRA 4-bit NF4 + Double Quantization cho Qwen2.5-7B / Sailor2-8B
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+lora_config = LoraConfig(
+    r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+)
+
+# 2. Định nghĩa Đồ thị Trạng thái LangGraph cho Hệ thống Agentic RAG Tiếng Việt
+class RAGState(TypedDict):
+    question: str
+    segmented_query: str
+    documents: List[dict]
+    is_relevant: bool
+    rewrite_count: int
+    answer: str
+
+# workflow = StateGraph(RAGState)
+# workflow.add_conditional_edges("doc_grader", lambda s: "generate" if s["is_relevant"] else "rewrite_query")</code></pre>
+            </div>
+
+            <div class="stage-footer-cta mt-16">
+              <div>
+                <h4>Chạy thử Đồ thị LangGraph RAG &amp; Máy tính VRAM QLoRA Trực tiếp!</h4>
+                <p class="muted">Mở <strong>Phòng Thí Nghiệm Giai đoạn 4</strong> để điều chỉnh trọng số Hybrid Search (BM25 + BGE-M3) và tính toán VRAM cho các mô hình 7B–14B.</p>
+              </div>
+              <button class="btn-primary" type="button" data-Jump-Tab="sandbox">
+                <svg class="svg-icon" width="16" height="16"><use href="#ic-terminal"></use></svg>
+                <span>Mở Phòng Thí Nghiệm RAG &amp; QLoRA</span>
+              </button>
+            </div>
+          </article>
         </div>
 
         <!-- Tab 2: Live Sandbox Stage 4 -->

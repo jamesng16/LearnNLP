@@ -31,7 +31,7 @@ const canvasAnimState = {
   rafId: null,
 };
 
-// Ngân hàng câu hỏi trắc nghiệm thực chiến cho 4 giai đoạn
+// Ngân hàng 16 câu hỏi trắc nghiệm chuyên sâu cho 4 giai đoạn (4 câu / giai đoạn)
 const QUIZ_BANK = {
   1: [
     {
@@ -53,6 +53,26 @@ const QUIZ_BANK = {
       ],
       correct: 1,
       explain: "Đúng! Kho dữ liệu 20GB huấn luyện PhoBERT và VnCoreNLP chủ yếu sử dụng quy tắc dấu thanh kiểu cũ ('hòa', 'khỏe', 'thủy').",
+    },
+    {
+      q: "Câu 1.3: Thuật toán RDRSegmenter của VnCoreNLP giải quyết hiện tượng nhập nhằng ranh giới từ ghép tiếng Việt bằng cơ chế nào?",
+      options: [
+        "Khởi tạo bằng Longest-Matching từ điển, sau đó duyệt qua Cây quy tắc ngoại lệ SCRDR (Single Classification Ripple-Down Rules) xét ngữ cảnh 5 âm tiết xung quanh để sửa nhãn B_W / I_W.",
+        "Cắt ngẫu nhiên cứ 2 âm tiết thành 1 từ ghép.",
+        "Chỉ tra từ điển đơn thuần mà không xét ngữ cảnh câu.",
+      ],
+      correct: 0,
+      explain: "Chính xác! Cây quy tắc ngoại lệ SCRDR giúp VnCoreNLP đạt ~97.9% F1 trên tập VLSP 2013 và xử lý tốt các câu nhập nhằng như 'Học_sinh học sinh_học'.",
+    },
+    {
+      q: "Câu 1.4: Ký tự ẩn Zero-Width Space (U+200B) thường xuất hiện khi copy văn bản từ web/PDF gây ra tác hại gì nếu không được xóa trước khi tách từ?",
+      options: [
+        "Nó nằm xen giữa các chữ cái (ví dụ 'giảng\\u200bviên') khiến mắt thường không nhìn thấy nhưng làm bộ tách từ và Regex coi đó là một từ lạ hoàn toàn.",
+        "Nó tự động dịch văn bản sang tiếng Anh.",
+        "Nó làm tăng kích thước ảnh trên trang web.",
+      ],
+      correct: 0,
+      explain: "Đúng vậy! Xóa các ký tự điều khiển ẩn [\\u200b\\u200c\\u200d\\ufeff] luôn là bước đầu tiên bắt buộc trong hàm clean_vietnamese_text().",
     },
   ],
   2: [
@@ -76,6 +96,26 @@ const QUIZ_BANK = {
       correct: 0,
       explain: "Chuẩn xác! Cosine Similarity đo cos(θ) giữa 2 vector trong không gian nhiều chiều, không bị nhiễu bởi độ dài văn bản.",
     },
+    {
+      q: "Câu 2.3: Hạn chế lớn nhất của các mô hình Static Word Embeddings như Word2Vec và PhoW2V đối với từ đa nghĩa (ví dụ từ 'đường' trong 'đường mía' và 'con đường') là gì?",
+      options: [
+        "Mỗi từ trong từ điển chỉ có duy nhất 1 vector cố định, không thay đổi theo ngữ cảnh của câu (Polysemy Bottleneck).",
+        "PhoW2V chỉ hỗ trợ các từ tiếng Việt có 1 âm tiết.",
+        "Word2Vec không thể tính được phép nhân vô hướng.",
+      ],
+      correct: 0,
+      explain: "Chính xác! Vì vector tĩnh cố định cho mỗi mục từ, từ 'đường' ở mọi ngữ cảnh đều nhận cùng 1 vector. Nhược điểm này được giải quyết triệt để bởi cơ chế Self-Attention trong PhoBERT.",
+    },
+    {
+      q: "Câu 2.4: Khi huấn luyện mô hình phân loại cảm xúc trên tập UIT-VSFC (trong đó nhãn Neutral chỉ chiếm ~4% dữ liệu), kỹ thuật nào giúp mô hình không bỏ sót lớp thiểu số?",
+      options: [
+        "Bật tham số class_weight='balanced' trong LinearSVC / LogisticRegression và đánh giá bằng thước đo Macro-F1 thay vì chỉ nhìn Accuracy.",
+        "Xóa toàn bộ các câu thuộc nhãn Positive.",
+        "Chỉ dùng Unigram mà bỏ hoàn toàn Bigram.",
+      ],
+      correct: 0,
+      explain: "Hoàn toàn chính xác! class_weight='balanced' tự động tăng trọng số phạt khi phân loại sai lớp thiểu số Neutral, và Macro-F1 tính trung bình đều trên cả 3 lớp.",
+    },
   ],
   3: [
     {
@@ -98,6 +138,26 @@ const QUIZ_BANK = {
       correct: 0,
       explain: "Rất chuẩn! Chỉ các mô hình huấn luyện trên dữ liệu đã qua RDRSegmenter như PhoBERT/PhoW2V/PhoNLP mới nối '_'. Còn ViT5, Qwen, Sailor2, BGE-M3 dùng văn bản tự nhiên.",
     },
+    {
+      q: "Câu 3.3: Trong bài toán Nhận diện thực thể (NER) với PhoBERT, khi một từ ghép mang nhãn 'B-LOC' bị BPE tách thành 2 subwords, tại sao subword thứ 2 được gán nhãn -100?",
+      options: [
+        "Vì -100 là giá trị ignore_index mặc định của hàm torch.nn.CrossEntropyLoss, giúp chỉ tính đạo hàm trên subword đại diện đầu tiên của mỗi từ.",
+        "Vì -100 là ID của nhãn địa danh trong bảng mã VLSP.",
+        "Vì PyTorch chỉ chấp nhận số âm cho bài toán NER.",
+      ],
+      correct: 0,
+      explain: "Chính xác! Gán -100 cho các token đặc biệt (<s>, </s>, <pad>) và các subword hậu tố giúp quá trình huấn luyện Token Classification căn chỉnh chuẩn xác với nhãn mức từ.",
+    },
+    {
+      q: "Câu 3.4: Thước đo ROUGE-L thường dùng để đánh giá chất lượng tóm tắt văn bản tiếng Việt của mô hình VietAI/vit5 trên tập VietNews dựa trên nguyên lý nào?",
+      options: [
+        "Độ dài chuỗi con chung dài nhất (Longest Common Subsequence - LCS) giữa bản tóm tắt máy sinh và bản tóm tắt chuẩn của biên tập viên.",
+        "Tốc độ sinh token trên mỗi giây.",
+        "Số lượng dấu câu xuất hiện trong bài báo gốc.",
+      ],
+      correct: 0,
+      explain: "Đúng! ROUGE-L đo mức độ bảo toàn cấu trúc mạch câu thông qua chuỗi con chung dài nhất (LCS) ở mức từ hoặc âm tiết.",
+    },
   ],
   4: [
     {
@@ -119,6 +179,26 @@ const QUIZ_BANK = {
       ],
       correct: 0,
       explain: "Xuất sắc! Hybrid Search (kết hợp qua Reciprocal Rank Fusion) tận dụng thế mạnh khớp từ khóa chính xác của BM25 và hiểu ngữ cảnh đồng nghĩa của Dense Embedding.",
+    },
+    {
+      q: "Câu 4.3: Chỉ số Token Fertility Rate (số subword token trung bình trên mỗi từ tiếng Việt) của các mô hình như Qwen2.5 / Sailor2 (~1.25) thấp hơn nhiều so với LLaMA-2 gốc (~2.8) mang lại lợi ích gì?",
+      options: [
+        "Giúp đọc được văn bản tiếng Việt dài hơn gấp đôi trong cùng cửa sổ ngữ cảnh, giảm hơn 50% dung lượng KV-Cache và tăng gấp đôi tốc độ sinh chữ.",
+        "Làm tăng dung lượng file trọng số lên gấp 10 lần.",
+        "Bắt buộc người dùng phải viết tiếng Việt không dấu.",
+      ],
+      correct: 0,
+      explain: "Chính xác! Fertility Rate thấp chứng tỏ bộ từ điển của LLM đã chứa sẵn các âm tiết và từ tiếng Việt có dấu nguyên vẹn thay vì phải bẻ nhỏ từng byte UTF-8.",
+    },
+    {
+      q: "Câu 4.4: Trong kiến trúc Agentic Self-RAG xây dựng bằng LangGraph trên tập UIT-ViQuAD 2.0, nút Document Grader kết hợp Conditional Edge có vai trò gì?",
+      options: [
+        "Kiểm tra xem các đoạn văn truy xuất được có thực sự chứa thông tin trả lời câu hỏi hay không; nếu điểm thấp sẽ kích hoạt Query Rewriter viết lại câu truy vấn hoặc từ chối trả lời để chống ảo giác (Hallucination).",
+        "Xóa toàn bộ cơ sở dữ liệu Vector sau mỗi câu hỏi.",
+        "Tự động dịch câu trả lời sang tiếng Pháp.",
+      ],
+      correct: 0,
+      explain: "Hoàn toàn chính xác! Vòng lặp tự kiểm định (Self-Correction Loop) trong LangGraph là chìa khóa giúp hệ thống RAG doanh nghiệp đạt độ tin cậy cao.",
     },
   ],
 };
@@ -161,7 +241,7 @@ function svgIcon(id, extraClass = "") {
 }
 
 function updateProgressUI() {
-  const maxXP = 800;
+  const maxXP = 1200;
   const pct = Math.min(100, Math.round((userProgress.xp / maxXP) * 100));
   const xpEl = document.getElementById("xpDisplay");
   if (xpEl) {
@@ -400,6 +480,37 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       document.startViewTransition(() => updateTabState());
+    });
+  });
+
+  // Footer CTA buttons to jump directly to Sandbox/Exercise tab
+  document.querySelectorAll("[data-jump-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetTab = btn.getAttribute("data-jump-tab") || "sandbox";
+      const tabBtn = document.querySelector(`.mode-tab[data-tab="${targetTab}"]`);
+      if (tabBtn) {
+        tabBtn.click();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  });
+
+  // Copy Python code block buttons
+  document.querySelectorAll("[data-copy-target]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const targetId = btn.getAttribute("data-copy-target");
+      const codeEl = document.getElementById(targetId);
+      if (!codeEl) return;
+      try {
+        await navigator.clipboard.writeText(codeEl.innerText);
+        const origHtml = btn.innerHTML;
+        btn.innerHTML = `${svgIcon("ic-check-circle", "svg-icon-sm")}<span>Đã Copy!</span>`;
+        setTimeout(() => {
+          btn.innerHTML = origHtml;
+        }, 1800);
+      } catch (e) {
+        console.warn("Clipboard copy failed:", e);
+      }
     });
   });
 
