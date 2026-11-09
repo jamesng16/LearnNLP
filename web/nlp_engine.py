@@ -27,6 +27,8 @@ from vn_preprocessing import (  # noqa: E402
     NEW_TO_OLD_TONE_MAP,
     ZERO_WIDTH_PATTERN,
     clean_vietnamese_text,
+    normalize_teencode,
+    normalize_vietnamese_tone,
 )
 
 SAMPLES_DIR = REPO_ROOT / "datasets" / "samples"
@@ -226,6 +228,9 @@ def inspect_and_preprocess(
     ]
 
     # Phát hiện các từ được mở rộng teencode & đổi dấu thanh
+    teencode_expanded = (
+        normalize_teencode(text_nfc) if expand_teencode else text_nfc
+    )
     final_cleaned = clean_vietnamese_text(
         raw_text,
         tone_style=tone_style,
