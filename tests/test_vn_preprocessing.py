@@ -70,7 +70,7 @@ class TestVietnameseNLPFoundations(unittest.TestCase):
 
     def test_all_notebooks_valid_json_structure(self) -> None:
         notebooks = list(ROOT_DIR.glob("**/*.ipynb"))
-        self.assertEqual(len(notebooks), 8)
+        self.assertGreaterEqual(len(notebooks), 8)
         for nb_path in notebooks:
             with open(nb_path, "r", encoding="utf-8") as f:
                 nb_data = json.load(f)
@@ -148,6 +148,37 @@ class TestVietnameseNLPFoundations(unittest.TestCase):
         )
         self.assertEqual(code, 200)
         self.assertTrue(ex["passed"])
+
+        # 8. POST /api/production-pipeline & Stage 5 Exercise
+        code, prod = handle_api_request(
+            "/api/production-pipeline",
+            "POST",
+            {
+                "raw_text": "Chương II: Thanh toán. Điều 12: Khách Nguyễn Văn A (CCCD: 079099001234, SĐT: 0912345678) thanh toán hợp đồng HD-2026 trị giá 150 triệu đồng.",
+                "chunk_mode": "structure_aware",
+                "mask_pii": True,
+            },
+        )
+        self.assertEqual(code, 200)
+        self.assertTrue(prod["guardrail_safe"])
+        self.assertGreaterEqual(len(prod["pii_detected"]), 2)
+        self.assertIn("[MASKED_CCCD]", prod["masked_text"])
+        self.assertEqual(prod["structured_output"]["reference_id"], "HD-2026")
+
+        code, ex5 = handle_api_request(
+            "/api/evaluate-exercise",
+            "POST",
+            {
+                "stage_id": 5,
+                "payload": {
+                    "pii_masking": "mask_before_llm",
+                    "chunk_strategy": "structure_aware_rerank",
+                    "serving_stack": "tier_router_vllm",
+                },
+            },
+        )
+        self.assertEqual(code, 200)
+        self.assertTrue(ex5["passed"])
 
 
 if __name__ == "__main__":

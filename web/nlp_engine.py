@@ -783,4 +783,128 @@ def evaluate_exercise(stage_id: int, payload: dict[str, Any]) -> dict[str, Any]:
             ),
         }
 
+    if stage_id == 5:
+        # Bài tập Giai đoạn 5: Kiến trúc Triển khai Production NLP Doanh nghiệp
+        pii_mask = payload.get("pii_masking", "")
+        chunk_strategy = payload.get("chunk_strategy", "")
+        serving_stack = payload.get("serving_stack", "")
+        passed = (
+            pii_mask == "mask_before_llm"
+            and chunk_strategy == "structure_aware_rerank"
+            and serving_stack == "tier_router_vllm"
+        )
+        return {
+            "stage_id": 5,
+            "passed": passed,
+            "score": 100 if passed else 45,
+            "feedback": (
+                "Xuất sắc! Bạn đã thiết kế chuẩn kiến trúc Production NLP: (1) Ẩn danh PII (CCCD/SĐT/Email) trước khi gọi LLM theo Nghị định 13, (2) Phân mảnh theo cấu trúc Điều/Khoản kèm Cross-Encoder Reranker, và (3) Phân tầng mô hình (TF-IDF/PhoBERT ONNX cho tác vụ phân loại nhanh + vLLM cho sinh văn bản)."
+                if passed
+                else "Gợi ý Production: Luôn ẩn danh PII trước khi gửi lên LLM, dùng Structure-Aware Chunking + Cross-Encoder Reranker cho tài liệu dài, và kết hợp phân tầng PhoBERT ONNX + vLLM để tối ưu chi phí."
+            ),
+        }
+
     return {"stage_id": stage_id, "passed": False, "score": 0, "feedback": "Stage không hợp lệ."}
+
+
+def run_production_pipeline(
+    raw_text: str,
+    chunk_mode: str = "structure_aware",
+    mask_pii: bool = True,
+) -> dict[str, Any]:
+    """Pipeline Thực chiến Doanh nghiệp (Mô-đun 05):
+    1. Quét & Ẩn danh dữ liệu cá nhân nhạy cảm (PII Masking: CCCD, SĐT, Email, STK).
+    2. So sánh Structure-Aware Chunking (theo Chương/Điều/Khoản + Header Injection) vs Fixed-Size Chunking.
+    3. Trích xuất Structured JSON Output (Hợp đồng / Khiếu nại / Pháp luật) & Chấm điểm Guardrails.
+    """
+    cleaned = clean_vietnamese_text(raw_text or "", tone_style="old", expand_teencode=True)
+
+    # 1. PII Detection & Masking
+    pii_detected: list[dict[str, str]] = []
+    masked_text = cleaned
+
+    pii_patterns = [
+        ("PHONE_VN", r"\b(?:\+84|0)(?:3|5|7|8|9)\d{8}\b", "[MASKED_PHONE]"),
+        ("CCCD_12", r"\b0\d{11}\b", "[MASKED_CCCD]"),
+        ("EMAIL", r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", "[MASKED_EMAIL]"),
+    ]
+
+    for pii_type, pattern, placeholder in pii_patterns:
+        for m in re.finditer(pattern, masked_text):
+            pii_detected.append({"type": pii_type, "value": m.group(0), "masked_as": placeholder})
+        if mask_pii:
+            masked_text = re.sub(pattern, placeholder, masked_text)
+
+    # 2. Prompt Injection & Safety Guardrail Check
+    injection_keywords = ["quên mọi hướng dẫn", "ignore previous", "system prompt", "bỏ qua quy tắc"]
+    is_safe = not any(kw in cleaned.lower() for kw in injection_keywords)
+
+    # 3. Document Chunking Comparison (Structure-Aware vs Fixed-Size Naive)
+    doc_title = "Quy chế & Hợp đồng Dịch vụ Doanh nghiệp"
+    header_match = re.search(r"(Chương\s+[IVX0-9]+[^\n.]*)", masked_text, flags=re.IGNORECASE)
+    if header_match:
+        doc_title = header_match.group(1).strip()
+
+    chunks: list[dict[str, Any]] = []
+    if chunk_mode == "structure_aware":
+        # Tách theo ranh giới Điều / Khoản và đính kèm Contextual Parent Header
+        parts = re.split(r"(?=Điều\s+\d+[\.:]|Khoản\s+\d+[\.:])", masked_text)
+        parts = [p.strip() for p in parts if p.strip()]
+        if not parts:
+            parts = [masked_text]
+        for idx, p in enumerate(parts, 1):
+            clause_match = re.match(r"^(Điều\s+\d+|Khoản\s+\d+)", p)
+            clause_tag = clause_match.group(1) if clause_match else f"Đoạn {idx}"
+            enriched = f"[{doc_title} > {clause_tag}] {p}"
+            rerank_score = round(min(0.98, 0.78 + (0.15 if "Điều" in p or "bồi thường" in p.lower() or "thanh toán" in p.lower() else 0.04)), 3)
+            chunks.append({
+                "chunk_id": f"struct_chunk_{idx:02d}",
+                "strategy": "Structure-Aware + Header Injection",
+                "parent_header": f"{doc_title} > {clause_tag}",
+                "text": enriched,
+                "char_len": len(enriched),
+                "reranker_score": rerank_score,
+                "intact_semantics": True,
+            })
+    else:
+        # Fixed-size 90 chars: cắt đứt giữa chừng câu và mất tiêu đề Điều/Khoản
+        step = 90
+        for idx, start in enumerate(range(0, max(1, len(masked_text)), step), 1):
+            sub = masked_text[start : start + step]
+            chunks.append({
+                "chunk_id": f"naive_chunk_{idx:02d}",
+                "strategy": "Fixed-Size (90 chars - Cắt đứt câu!)",
+                "parent_header": "(Mất tiêu đề gốc)",
+                "text": sub,
+                "char_len": len(sub),
+                "reranker_score": round(max(0.28, 0.55 - idx * 0.07), 3),
+                "intact_semantics": False,
+            })
+
+    # 4. Structured JSON Extraction (Pydantic Schema Simulation)
+    order_match = re.search(r"\b(?:HD|DH|VN|ORD)[-_]?\d{3,8}\b", cleaned, flags=re.IGNORECASE)
+    money_match = re.search(r"\b\d+(?:[.,]\d+)?\s*(?:triệu|tỷ|nghìn|đồng|VNĐ|vnd|%)\b", cleaned, flags=re.IGNORECASE)
+    clause_refs = re.findall(r"Điều\s+\d+", cleaned, flags=re.IGNORECASE)
+
+    structured_json = {
+        "schema_version": "v1.0-pydantic",
+        "guardrail_status": "PASSED" if is_safe else "BLOCKED_PROMPT_INJECTION",
+        "pii_redacted_count": len(pii_detected),
+        "document_category": "Pháp chế & Hợp đồng" if clause_refs else "Hỗ trợ Khách hàng / Vận hành",
+        "reference_id": order_match.group(0).upper() if order_match else "DOC-2026-VN",
+        "referenced_clauses": clause_refs or ["Điều khoản chung"],
+        "financial_entity": money_match.group(0) if money_match else "Không đề cập",
+        "recommended_serving_tier": "PhoBERT-v2 ONNX (CPU/T4, ~8ms)" if not clause_refs else "Hybrid RAG + Reranker + Qwen2.5 vLLM (~185ms)",
+    }
+
+    return {
+        "raw_text": raw_text,
+        "masked_text": masked_text,
+        "mask_pii_enabled": mask_pii,
+        "pii_detected": pii_detected,
+        "guardrail_safe": is_safe,
+        "chunk_mode": chunk_mode,
+        "chunks": chunks,
+        "structured_output": structured_json,
+    }
+

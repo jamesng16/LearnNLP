@@ -31,6 +31,7 @@ from nlp_engine import (  # noqa: E402
     evaluate_exercise,
     explore_embeddings_and_classify,
     inspect_and_preprocess,
+    run_production_pipeline,
     segment_and_tag,
     simulate_agentic_rag,
 )
@@ -94,6 +95,17 @@ def handle_api_request(path: str, method: str, body: dict[str, Any]) -> tuple[in
             ),
             use_word_seg_bm25=bool(body.get("use_word_seg_bm25", True)),
             dense_weight=float(body.get("dense_weight", 0.6)),
+        )
+        return 200, res
+
+    if path == "/api/production-pipeline" and method == "POST":
+        res = run_production_pipeline(
+            raw_text=body.get(
+                "raw_text",
+                "Chương II: Quy định Thanh toán & Bảo mật. Điều 12: Khách hàng Nguyễn Văn A (CCCD: 079099001234, SĐT: 0912345678, Email: nva@company.vn) thanh toán hợp đồng HD-2026 trị giá 150 triệu đồng. Điều 15: Nếu giao hàng chậm quá 7 ngày, bên bán bồi thường 8% giá trị hợp đồng.",
+            ),
+            chunk_mode=body.get("chunk_mode", "structure_aware"),
+            mask_pii=bool(body.get("mask_pii", True)),
         )
         return 200, res
 
